@@ -1,32 +1,22 @@
+// src/App.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import Login from './login/login';
+import Register from './login/registrar';
 
 function App() {
-  const [mensaje, setMensaje] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/api/mensajes', { contenido: mensaje });
-      console.log('Mensaje insertado:', response.data);
-      setMensaje(''); // Limpiar el campo después de insertar
-    } catch (error) {
-      console.error('Error al insertar el mensaje:', error);
-    }
-  };
+  const handleRegisterClick = () => setIsRegistering(true);
+  const handleBackToLogin = () => setIsRegistering(false);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Mensaje:
-        <input
-          type="text"
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)}
-        />
-      </label>
-      <button type="submit">Enviar</button>
-    </form>
+    <div className="App container">
+      {isRegistering ? (
+        <Register onBackToLogin={handleBackToLogin} />
+      ) : (
+        <Login onRegister={handleRegisterClick} />
+      )}
+    </div>
   );
 }
 
