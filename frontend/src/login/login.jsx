@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import './login.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function Login({ onRegister }) {
   const [email, setEmail] = useState('');
@@ -32,51 +35,28 @@ function Login({ onRegister }) {
   };
 
   return (
-    <div className="container">
-      <div className="row h-100 justify-content-center align-items-center">
-        <div className="col-12 col-md-6 col-lg-12">
-          <div className="card p-4 shadow-lg">
-            <h3 className="card-title text-center">Login</h3>
-            {error && <div className="alert alert-danger">{error}</div>}
-            <form onSubmit={handleSubmit}>
-              <div className="form-group mb-3">
-                <label htmlFor="email">Email:</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group mb-3">
-                <label htmlFor="password">Password:</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <button type="submit" className="btn btn-primary w-100">Login</button>
+    <div className="container d-flex align-items-center justify-content-center vh-100">
+        <div className="col-12 col-md-8 col-lg-6 col-xl-5">
+            <form onSubmit = {handleSubmit} className="p-4 shadow rounded custom-form">
+                <h4 className="text-center mb-4">Iniciar Sesión</h4>
+                <div className="mb-3">
+                    <label htmlFor="inputUsuario" className="form-label">Nombre de Usuario</label>
+                    <input type="text" className="form-control" id="inputUsuario" aria-describedby="emailHelp" />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="inputContraseña" className="form-label">Contraseña</label>
+                    <input type="password" className="form-control" id="inputContraseña" />
+                </div>
+                <div className="mb-3 form-check">
+                    <input type="checkbox" className="form-check-input custom-checkbox" id="RecordarCheck" />
+                    <label className="form-check-label" htmlFor="RecordarCheck">Recordar Contraseña</label>
+                </div>
+                <button type="submit" className="btn btn-dark w-100 mb-4">Iniciar Sesión</button>
+                <a href="#" className="forgot-password">Olvido su contraseña?</a>
             </form>
-
-            {/* Botón de registro */}
-            <div className="mt-3 text-center">
-              <button className="btn btn-link" onClick={onRegister}>
-                ¿No tienes una cuenta? Regístrate
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  );
+);
 }
 
 export default Login;
