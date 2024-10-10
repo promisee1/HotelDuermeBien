@@ -1,5 +1,6 @@
 // src/components/Register.js
 import React, { useState } from 'react';
+import './login.css';
 
 function Register({ onBackToLogin }) {
   const [nombre_usuario, setNombreUsuario] = useState('');
@@ -26,6 +27,13 @@ function Register({ onBackToLogin }) {
         return;
       }
 
+      if (response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || 'Registro exitoso');
+        alert('Registro exitoso');
+        return;
+      }
+
       const data = await response.json();
       console.log('Registro exitoso:', data.user);
       onBackToLogin(); // Navegar de vuelta al login después de registrarse
@@ -36,11 +44,11 @@ function Register({ onBackToLogin }) {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="card p-4 shadow-lg" style={{ width: '25rem' }}>
-        <h3 className="card-title text-center">Regístrate</h3>
+    <div className="container d-flex align-items-center justify-content-center vh-100">
+      <div className="col-12 col-md-8 col-lg-6 col-xl-5">
         {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleRegister}>
+        <form onSubmit={handleRegister} className="custom-form p-4 rounded shadow">
+        <h3 className="text-center">Regístrate</h3> 
           <div className="form-group mb-3">
             <label htmlFor="nombre_usuario">Nombre de Usuario:</label>
             <input
@@ -89,13 +97,13 @@ function Register({ onBackToLogin }) {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">Registrar</button>
-        </form>
+          <button type="submit" className="btn btn-dark w-100">Registrar</button>
         <div className="mt-3">
           <button className="btn btn-link" onClick={onBackToLogin}>¿Ya tienes cuenta? Inicia sesión</button>
         </div>
+        </form>
       </div>
-    </div>
+      </div>
   );
 }
 
