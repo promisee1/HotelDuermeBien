@@ -1,45 +1,37 @@
-// src/components/Register.js
-import React, { useState } from 'react';
-import './login.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import "./login.css";
 
-function Register({ onBackToLogin }) {
-  const [nombre_usuario, setNombreUsuario] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rol, setRol] = useState('');
-  const [error, setError] = useState('');
+function Register() {
+  const [nombre_usuario, setNombreUsuario] = useState("");
+  const [email, setEmail] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [rol, setRol] = useState("Recepcionista");  // O el rol que prefieras
+  const [error, setError] = useState("");
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
-      const response = await fetch('http://localhost:5000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ nombre_usuario, email, password, rol }),
+      const response = await axios.post("http://localhost:5000/api/auth/register", {
+        nombre_usuario,
+        email,
+        contrasena,
+        rol,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || 'Error en el registro');
-        return;
+      const data = response.data;
+      if (data.message) {
+        console.log("Registro exitoso");
+        // Aquí puedes redirigir al login si el registro fue exitoso, usando una navegación programática
+      } else {
+        setError("Error al registrar");
       }
-
-      if (response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || 'Registro exitoso');
-        alert('Registro exitoso');
-        return;
-      }
-
-      const data = await response.json();
-      console.log('Registro exitoso:', data.user);
-      onBackToLogin(); // Navegar de vuelta al login después de registrarse
     } catch (error) {
-      console.error('Error en la petición:', error);
-      setError('Error de servidor');
+      console.error("Error en la petición:", error.response?.data || error.message);
+      setError(error.response?.data?.message || "Error de servidor");
     }
   };
 
@@ -47,63 +39,67 @@ function Register({ onBackToLogin }) {
     <div className="container d-flex align-items-center justify-content-center vh-100">
       <div className="col-12 col-md-8 col-lg-6 col-xl-5">
         {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleRegister} className="custom-form p-4 rounded shadow">
-        <h3 className="text-center">Regístrate</h3> 
-          <div className="form-group mb-3">
-            <label htmlFor="nombre_usuario">Nombre de Usuario:</label>
+        <form onSubmit={handleSubmit} className="p-4 shadow rounded custom-form">
+          <h4 className="text-center mb-4">Regístrate</h4>
+          <div className="mb-3">
+            <label htmlFor="inputNombre" className="form-label">
+              Nombre de usuario
+            </label>
             <input
               type="text"
               className="form-control"
-              id="nombre_usuario"
-              placeholder="Tu nombre de usuario"
-              value={nombre_usuario}
+              id="inputNombre"
               onChange={(e) => setNombreUsuario(e.target.value)}
+              value={nombre_usuario}
               required
             />
           </div>
-          <div className="form-group mb-3">
-            <label htmlFor="email">Email:</label>
+          <div className="mb-3">
+            <label htmlFor="inputEmail" className="form-label">
+              Correo electrónico
+            </label>
             <input
               type="email"
               className="form-control"
-              id="email"
-              placeholder="Tu email"
-              value={email}
+              id="inputEmail"
               onChange={(e) => setEmail(e.target.value)}
+              value={email}
               required
             />
           </div>
-          <div className="form-group mb-3">
-            <label htmlFor="password">Contraseña:</label>
+          <div className="mb-3">
+            <label htmlFor="inputContraseña" className="form-label">
+              Contraseña
+            </label>
             <input
               type="password"
               className="form-control"
-              id="password"
-              placeholder="Crea una contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="inputContraseña"
+              onChange={(e) => setContrasena(e.target.value)}
+              value={contrasena}
               required
             />
           </div>
-          <div className="form-group mb-3">
-            <label htmlFor="rol">Rol:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="rol"
-              placeholder="Tu rol (ej: admin, usuario)"
+          <div className="mb-3">
+            <label htmlFor="selectRol" className="form-label">Rol</label>
+            <select
+              className="form-select"
+              id="selectRol"
               value={rol}
               onChange={(e) => setRol(e.target.value)}
-              required
-            />
+            >
+              <option value="Administrador">Administrador</option>
+              <option value="Recepcionista">Recepcionista</option>
+            </select>
           </div>
-          <button type="submit" className="btn btn-dark w-100">Registrar</button>
-        <div className="mt-3">
-          <button className="btn btn-link" onClick={onBackToLogin}>¿Ya tienes cuenta? Inicia sesión</button>
-        </div>
+          <button type="submit" className="btn btn-dark w-100 mb-4">Registrarse</button>
+          <div className="mt-3 text-center">
+            {/* Este botón redirige a la ruta de login */}
+            <Link to="/">¿Ya tienes una cuenta? Inicia sesión</Link>
+          </div>
         </form>
       </div>
-      </div>
+    </div>
   );
 }
 
