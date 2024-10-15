@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
+
+import Logo from '../assets/logo.png';  // Ajusta la ruta según la ubicación real
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -22,14 +28,16 @@ function Login({ onLoginSuccess }) {
 
       if (data.success) {
         console.log("Autenticación exitosa:", data);
-        // Enviamos el objeto `data` completo al manejador de éxito en `App`
-        onLoginSuccess(data);  // Cambié para enviar `data` completo
+        onLoginSuccess(data);  // Enviar `data` completo
+        toast.success("Autenticación exitosa");
       } else {
         setError(data.message || "Error de autenticación");
+        toast.error("Error de autenticación");
       }
     } catch (error) {
       console.error("Error en la petición:", error.response?.data || error.message);
       setError("Error de servidor o de conexión");
+      toast.error("Error de servidor o de conexión");
     }
   };
 
@@ -38,6 +46,8 @@ function Login({ onLoginSuccess }) {
       <div className="col-12 col-md-8 col-lg-6 col-xl-5">
         {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleSubmit} className="p-4 shadow rounded custom-form">
+          <img src={Logo} className="d-block mx-auto mb-4" alt="Logo"/>
+
           <h4 className="text-center mb-4">Iniciar Sesión</h4>
           <div className="mb-3">
             <label htmlFor="inputEmail" className="form-label">
@@ -68,11 +78,9 @@ function Login({ onLoginSuccess }) {
           <button type="submit" className="btn btn-dark w-100 mb-4">
             Iniciar Sesión
           </button>
-          <div className="mt-3 text-center">
-            <Link to="/register">¿No tienes una cuenta? Regístrate</Link>
-          </div>
         </form>
       </div>
+
     </div>
   );
 }
