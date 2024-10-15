@@ -1,14 +1,10 @@
-import mysql from 'mysql2/promise';
+import { Sequelize } from 'sequelize';
 
-export const pool = mysql.createPool({
+
+//Constante de conexión a la base de datos
+const sequelize = new Sequelize('db_duermebien', 'benjaja', 'benjadev', {
   host: 'localhost',
-  user: 'benjaja',
-  password: 'dev123',
-  database: 'db_duermebien',
-  port: 3306
+  dialect: 'mysql' // Cambia el dialecto si usas otra base de datos (por ejemplo, 'postgres', 'sqlite')
 });
 
-export const query = async (sql, params) => {
-  const [results] = await pool.execute(sql, params);
-  return results;
-};
+export default sequelize;

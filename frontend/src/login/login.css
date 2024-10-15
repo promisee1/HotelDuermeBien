@@ -1,6 +1,7 @@
 body {
     background: url('/src/Components/Assets/img/palladium-hotel-ibiza.jpg') no-repeat center center;
     background-size: cover;
+    padding-top: 0%;
 }
 
 .custom-form {
@@ -32,3 +33,4 @@ body {
         background-color: #000000 !important; 
         border-color: #000000 !important;
     }
+
