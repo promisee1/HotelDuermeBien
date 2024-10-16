@@ -4,10 +4,8 @@ import Usuario from '../models/usuarios.js';
 
 //Consulta Login
 export const login = async (req, res) => {
+
   const { email, contrasena } = req.body;
-
-
-
   // Verificar que todos los valores este definido
   if (!email || !contrasena) {
     return res.status(400).json({ success: false, message: "Todos los campos son obligatorios" });
@@ -84,7 +82,6 @@ export const getAllUsuarios = async (req, res) => {
   try {
     // Consulta a la base de datos para obtener todos los usuarios
     const usuarios = await Usuario.findAll();
-    console.log(usuarios);
 
     // Devolver los usuarios en la respuesta
     res.status(200).json(usuarios);
@@ -108,5 +105,28 @@ export const eliminarUsuario = async (req, res) => {
     return res.status(200).json({ message: 'Usuario eliminado exitosamente' });
   } catch (error) {
     return res.status(500).json({ message: 'Error en el servidor', error });
+  }
+};
+export const updateUsuario = async (req, res) => {
+  const { id } = req.params;
+  const { nombre_usuario, email, rol } = req.body; // No incluimos la contraseña aquí
+
+  try {
+    const usuario = await Usuario.findByPk(id); // Busca al usuario por ID
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Actualiza los datos del usuario, excepto la contraseña
+    await usuario.update({
+      nombre_usuario: nombre_usuario || usuario.nombre_usuario,
+      email: email || usuario.email,
+      rol: rol || usuario.rol,
+    });
+
+    return res.status(200).json({ message: 'Usuario actualizado exitosamente', usuario });
+  } catch (error) {
+    console.error('Error al actualizar el usuario:', error);
+    return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };

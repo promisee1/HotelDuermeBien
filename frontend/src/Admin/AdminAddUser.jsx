@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';  // Importar useNavigate para realizar la redirección
-import Toastify from "toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Header from './header';
 
 
@@ -25,12 +26,12 @@ const AdminAddUser = () => {
       });
       console.log('Usuario añadido:', response.data);
 
-      Toastify.success('Usuario anadido');
+      toast.success('Usuario anadido');
       // Redirigir al home del administrador después de añadir el usuario exitosamente
       setTimeout(() => navigate('/admin'), 3500);  // Redirige a la página principal del administrador con un pequeño delay
     } catch (error) {
       console.error('Error al añadir usuario:', error);
-      Toastify.error('Error al añadir usuario');
+      toast.error('Error al añadir usuario');
     }
   };
 
@@ -78,6 +79,7 @@ const AdminAddUser = () => {
         </div>
         <button type="submit" className="btn btn-primary">Añadir Usuario</button>
       </form>
+      <ToastContainer />
     </div>
   );
 };
