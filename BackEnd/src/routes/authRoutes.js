@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, eliminarUsuario } from '../controllers/authControllers.js';
+import { register, login, eliminarUsuario, updateUsuario } from '../controllers/authControllers.js';
 import { verifyToken } from '../controllers/authMiddleware.js';  // Importar el middleware de autenticación
 import { getAllUsuarios } from '../controllers/authControllers.js';
 
@@ -14,6 +14,8 @@ router.post('/login', login);
 router.get('/usuarios', getAllUsuarios);
 
 router.delete('/usuarios/:id', eliminarUsuario);
+
+router.put('/usuarios/:id', updateUsuario);
 
 // Rutas protegidas (ejemplo de ruta protegida)
 router.get('/perfil', verifyToken, (req, res) => {

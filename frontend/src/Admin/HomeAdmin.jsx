@@ -38,6 +38,8 @@ const HomeAdmin = () => {
 
       // Mostrar mensaje de éxito
       toast.success("Usuario eliminado con éxito");
+
+      
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
       toast.error("Error al eliminar el usuario");
@@ -77,28 +79,31 @@ const HomeAdmin = () => {
   // Función para guardar los cambios del usuario editado
   const editarUsuario = async () => {
     try {
-      // Envía la actualización a la API
-      await axios.put(
-        `http://localhost:5000/api/auth/usuarios/${selectedUsuario.id_usuario}`,
-        selectedUsuario
-      );
-
-      // Actualiza la lista de usuarios con los datos editados
+      // Enviamos solo los datos que deben actualizarse
+      await axios.put(`http://localhost:5000/api/auth/usuarios/${selectedUsuario.id_usuario}`, {
+        nombre_usuario: selectedUsuario.nombre_usuario,
+        email: selectedUsuario.email,
+        rol: selectedUsuario.rol,
+      });
+  
+      // Actualizamos la lista de usuarios localmente
       setUsuarios(
         usuarios.map((usuario) =>
           usuario.id_usuario === selectedUsuario.id_usuario
-            ? selectedUsuario
+            ? { ...usuario, ...selectedUsuario } // Actualizamos solo los datos necesarios
             : usuario
         )
       );
-
+  
       toast.success("Usuario actualizado con éxito");
-      setIsModalOpen(false); // Cierra el modal después de la edición
+      setIsModalOpen(false); // Cerramos el modal después de la edición
     } catch (error) {
       console.error("Error al editar el usuario:", error);
       toast.error("Error al editar el usuario");
     }
   };
+  
+  
 
   // Manejar el cambio de los campos del formulario de edición
   const handleInputChange = (e) => {
@@ -209,14 +214,16 @@ const HomeAdmin = () => {
           </div>
           <div className="form-group">
             <label htmlFor="rol">Rol</label>
-            <input
-              type="text"
+            <select
               id="rol"
               name="rol"
               className="form-control"
               value={selectedUsuario?.rol || ""}
               onChange={handleInputChange}
-            />
+            >
+              <option value="Recepcionista">Recepcionista</option>
+              <option value="Administrador">Administrador</option>
+            </select>
           </div>
           <button
             type="button"
