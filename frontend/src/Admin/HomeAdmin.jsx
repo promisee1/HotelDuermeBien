@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "./header.jsx"; // Importar el Header
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -7,7 +8,8 @@ import Modal from "react-modal"; // Asegúrate de tener instalado react-modal
 
 Modal.setAppElement("#root"); // Esto es necesario para accesibilidad en modales
 
-const HomeAdmin = () => {
+const HomeAdmin = ( { onLogout} ) => {
+  const navigate = useNavigate();
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUsuario, setSelectedUsuario] = useState(null); // Usuario seleccionado para editar
   const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal
@@ -111,9 +113,14 @@ const HomeAdmin = () => {
     setSelectedUsuario({ ...selectedUsuario, [name]: value });
   };
 
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
     <div className="container mt-5">
-      <Header />
+      <Header onLogout={handleLogout}/>
       <br></br><br />
       {/* Mostrar el Header */}
       <h2 className="mb-4">Lista de Usuarios</h2>
