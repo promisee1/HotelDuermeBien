@@ -4,11 +4,13 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "react-modal"; // Asegúrate de tener instalado react-modal
+import Busqueda from './Busqueda'; // Importar el componente de búsqueda
 
 Modal.setAppElement("#root"); // Esto es necesario para accesibilidad en modales
 
 const HomeAdmin = () => {
   const [usuarios, setUsuarios] = useState([]);
+  const [usuariosFiltrados, setUsuariosFiltrados] = useState([]); // Añadir estado para usuarios filtrados
   const [selectedUsuario, setSelectedUsuario] = useState(null); // Usuario seleccionado para editar
   const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal
 
@@ -20,6 +22,7 @@ const HomeAdmin = () => {
           "http://localhost:5000/api/auth/usuarios"
         ); // Cambia la ruta si es necesario
         setUsuarios(response.data);
+        setUsuariosFiltrados(response.data); // Inicializar los usuarios filtrados con todos los usuarios
       } catch (error) {
         console.error("Error al obtener los usuarios:", error);
         toast.error("Error al obtener la lista de usuarios");
@@ -33,13 +36,11 @@ const HomeAdmin = () => {
   const eliminarUsuario = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`); // Asegúrate de que la ruta sea correcta
-      // Filtra el usuario eliminado de la lista de usuarios
       setUsuarios(usuarios.filter((usuario) => usuario.id_usuario !== id));
-
-      // Mostrar mensaje de éxito
+      setUsuariosFiltrados(
+        usuariosFiltrados.filter((usuario) => usuario.id_usuario !== id)
+      );
       toast.success("Usuario eliminado con éxito");
-
-      
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
       toast.error("Error al eliminar el usuario");
@@ -79,14 +80,12 @@ const HomeAdmin = () => {
   // Función para guardar los cambios del usuario editado
   const editarUsuario = async () => {
     try {
-      // Enviamos solo los datos que deben actualizarse
       await axios.put(`http://localhost:5000/api/auth/usuarios/${selectedUsuario.id_usuario}`, {
         nombre_usuario: selectedUsuario.nombre_usuario,
         email: selectedUsuario.email,
         rol: selectedUsuario.rol,
       });
-  
-      // Actualizamos la lista de usuarios localmente
+
       setUsuarios(
         usuarios.map((usuario) =>
           usuario.id_usuario === selectedUsuario.id_usuario
@@ -94,7 +93,6 @@ const HomeAdmin = () => {
             : usuario
         )
       );
-  
       toast.success("Usuario actualizado con éxito");
       setIsModalOpen(false); // Cerramos el modal después de la edición
     } catch (error) {
@@ -102,8 +100,6 @@ const HomeAdmin = () => {
       toast.error("Error al editar el usuario");
     }
   };
-  
-  
 
   // Manejar el cambio de los campos del formulario de edición
   const handleInputChange = (e) => {
@@ -114,11 +110,13 @@ const HomeAdmin = () => {
   return (
     <div className="container mt-5">
       <Header />
-      <br></br><br />
+      <br /><br />
       {/* Mostrar el Header */}
       <h2 className="mb-4">Lista de Usuarios</h2>
-      {/* Mostrar la tabla con los usuarios */}
-      <table className="table table-striped table-bordered">
+
+      {/* Añadir componente de búsqueda */}
+      <Busqueda usuarios={usuarios} setUsuariosFiltrados={setUsuariosFiltrados} />
+      <table className=" mt-3 table table-striped table-bordered">
         <thead>
           <tr>
             <th>ID</th>
@@ -130,7 +128,8 @@ const HomeAdmin = () => {
           </tr>
         </thead>
         <tbody>
-          {usuarios.map((usuario) => (
+          {/* Usar usuarios filtrados en lugar de todos los usuarios */}
+          {usuariosFiltrados.map((usuario) => (
             <tr key={usuario.id_usuario}>
               <td>{usuario.id_usuario}</td>
               <td>{usuario.nombre_usuario}</td>
@@ -157,6 +156,7 @@ const HomeAdmin = () => {
           ))}
         </tbody>
       </table>
+
       {/* Modal para editar usuario */}
       <Modal
         isOpen={isModalOpen}
