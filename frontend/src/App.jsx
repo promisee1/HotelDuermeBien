@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import HomeAdmin from './Admin/HomeAdmin';
 import AdminAddUser from './Admin/AdminAddUser';
 import AdminProfile from './Admin/AdminProfile';
@@ -41,32 +41,12 @@ function App() {
       <Routes>
         {/* Ruta para el Administrador */}
         <Route
-          path="/admin"
+          path="/admin/*"
           element={
             isAuthenticated && userRole === 'Administrador' ? (
-              <HomeAdmin onLogout={handleLogout} />
+              <AdminRoutes onLogout={handleLogout} />
             ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-        <Route
-          path="/admin/add-user"
-          element={
-            isAuthenticated && userRole === 'Administrador' ? (
-              <AdminAddUser />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-        <Route
-          path="/admin/profile"
-          element={
-            isAuthenticated && userRole === 'Administrador' ? (
-              <AdminProfile />
-            ) : (
-              <Navigate to="/" />
+              <Navigate to="/" replace />
             )
           }
         />
@@ -75,9 +55,9 @@ function App() {
           path="/recepcionista"
           element={
             isAuthenticated && userRole === 'Recepcionista' ? (
-              <HomeRecepcionista />
+              <HomeRecepcionista onLogout={handleLogout} />
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/" replace />
             )
           }
         />
@@ -87,11 +67,11 @@ function App() {
           element={
             isAuthenticated ? (
               userRole === 'Administrador' ? (
-                <Navigate to="/admin" />
+                <Navigate to="/admin" replace />
               ) : userRole === 'Recepcionista' ? (
-                <Navigate to="/recepcionista" />
+                <Navigate to="/recepcionista" replace />
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/" replace />
               )
             ) : (
               <Login onLoginSuccess={handleLoginSuccess} />
@@ -100,6 +80,17 @@ function App() {
         />
       </Routes>
     </Router>
+  );
+}
+
+// Componente para manejar las rutas del administrador
+function AdminRoutes({ onLogout }) {
+  return (
+    <Routes>
+      <Route path="/" element={<HomeAdmin onLogout={onLogout} />} />
+      <Route path="add-user" element={<AdminAddUser />} />
+      <Route path="profile" element={<AdminProfile onLogout={onLogout} />} />
+    </Routes>
   );
 }
 

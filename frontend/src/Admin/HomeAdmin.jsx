@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
+>>>>>> Benja_Caballero
+import { useNavigate } from "react-router-dom";
+import Header from "./header.jsx"; // Importar el Header
+=======
 import Header from "./header.jsx"; 
+======= avances
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,9 +14,14 @@ import './admin.css';
 
 Modal.setAppElement("#root");
 
+>>>>>> Benja_Caballero
+const HomeAdmin = ( { onLogout} ) => {
+  const navigate = useNavigate();
+=======
 const HomeAdmin = () => {
   useBackground('/src/assets/homeAdmin.webp');
 
+======= avances
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUsuario, setSelectedUsuario] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,10 +118,22 @@ const HomeAdmin = () => {
     setSelectedUsuario({ ...selectedUsuario, [name]: value });
   };
 
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
+>>>>>>Benja_Caballero
+    <div className="container mt-5">
+      <Header onLogout={handleLogout}/>
+      <br></br><br />
+      {/* Mostrar el Header */}
+=======
     <div className="container mt-5 mb-5 contenedor">
       <Header />
       <br /><br />
+======= avances
       <h2 className="mb-4">Lista de Usuarios</h2>
 
       <div className="table-responsive">

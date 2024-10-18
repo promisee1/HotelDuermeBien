@@ -1,10 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Logo from '../assets/logo.png';
 import './header.css';
 
-const Header = () => {
+const Header = ( { onLogout } ) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/', { replace: true });
+  };
+
   return (
     <header>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -26,9 +33,12 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
 
+              <li className="nav-item">
                <Link className="nav-link" to="/admin/">
                   Lista de usuarios
                 </Link>
+              </li>
+
               <li className="nav-item">
                 <Link className="nav-link" to="/admin/add-user">
                   Añadir Usuario
@@ -38,6 +48,12 @@ const Header = () => {
                 <Link className="nav-link" to="/admin/profile">
                   Ver Perfil
                 </Link>
+              </li>
+
+              <li className="nav-item">
+                <button onClick={handleLogout} className="btn btn-link nav-link">
+                  Cerrar Sesión
+                </button>
               </li>
             </ul>
           </div>
