@@ -1,39 +1,46 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "./header.jsx"; // Importar el Header
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Modal from "react-modal"; // Asegúrate de tener instalado react-modal
 import Busqueda from './Busqueda'; // Importar el componente de búsqueda
+import Modal from "react-modal"; 
+import useBackground from "../assets/useBackground.jsx";
+import './admin.css'; 
 
-Modal.setAppElement("#root"); // Esto es necesario para accesibilidad en modales
+Modal.setAppElement("#root");
 
-const HomeAdmin = () => {
+const HomeAdmin = ({ onLogout }) => {
+  const navigate = useNavigate();
+  useBackground('/src/assets/homeAdmin.webp');
   const [usuarios, setUsuarios] = useState([]);
   const [usuariosFiltrados, setUsuariosFiltrados] = useState([]); // Añadir estado para usuarios filtrados
   const [selectedUsuario, setSelectedUsuario] = useState(null); // Usuario seleccionado para editar
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const loggedUserId = localStorage.getItem('loggedUserId'); // Obtener el ID del usuario logueado desde el localStorage
 
-  // Obtener la lista de usuarios desde la API cuando el componente cargue
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/usuarios"
-        ); // Cambia la ruta si es necesario
+        const response = await axios.get("http://localhost:5000/api/auth/usuarios");
         setUsuarios(response.data);
         setUsuariosFiltrados(response.data); // Inicializar los usuarios filtrados con todos los usuarios
+        toast.success("Lista de usuarios actualizada");
       } catch (error) {
         console.error("Error al obtener los usuarios:", error);
         toast.error("Error al obtener la lista de usuarios");
       }
     };
-
     fetchUsuarios();
   }, []);
 
-  // Función para eliminar un usuario de la API
   const eliminarUsuario = async (id) => {
+    if (id.toString() === loggedUserId) {
+      toast.error("No puedes eliminarte a ti mismo");
+      return;
+    }
+    
     try {
       await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`); // Asegúrate de que la ruta sea correcta
       setUsuarios(usuarios.filter((usuario) => usuario.id_usuario !== id));
@@ -47,8 +54,12 @@ const HomeAdmin = () => {
     }
   };
 
-  // Función para manejar la eliminación de usuario con confirmación
   const handleDelete = (id) => {
+    if (id.toString() === loggedUserId) {
+      toast.error("No puedes eliminarte a ti mismo");
+      return;
+    }
+
     toast(
       ({ closeToast }) => (
         <div>
@@ -56,8 +67,8 @@ const HomeAdmin = () => {
           <button
             className="btn btn-danger me-2"
             onClick={() => {
-              eliminarUsuario(id); // Llama a la función de eliminación
-              closeToast(); // Cierra el toast
+              eliminarUsuario(id);
+              closeToast();
             }}
           >
             Confirmar
@@ -67,17 +78,15 @@ const HomeAdmin = () => {
           </button>
         </div>
       ),
-      { autoClose: false } // Para que no se cierre automáticamente hasta que el usuario elija
+      { autoClose: false }
     );
   };
 
-  // Función para manejar la edición de usuario
   const handleEdit = (usuario) => {
-    setSelectedUsuario(usuario); // Guarda el usuario seleccionado
-    setIsModalOpen(true); // Abre el modal
+    setSelectedUsuario(usuario);
+    setIsModalOpen(true);
   };
 
-  // Función para guardar los cambios del usuario editado
   const editarUsuario = async () => {
     try {
       await axios.put(`http://localhost:5000/api/auth/usuarios/${selectedUsuario.id_usuario}`, {
@@ -89,29 +98,32 @@ const HomeAdmin = () => {
       setUsuarios(
         usuarios.map((usuario) =>
           usuario.id_usuario === selectedUsuario.id_usuario
-            ? { ...usuario, ...selectedUsuario } // Actualizamos solo los datos necesarios
+            ? { ...usuario, ...selectedUsuario }
             : usuario
         )
       );
       toast.success("Usuario actualizado con éxito");
-      setIsModalOpen(false); // Cerramos el modal después de la edición
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error al editar el usuario:", error);
       toast.error("Error al editar el usuario");
     }
   };
 
-  // Manejar el cambio de los campos del formulario de edición
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSelectedUsuario({ ...selectedUsuario, [name]: value });
   };
 
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
     <div className="container mt-5">
-      <Header />
-      <br /><br />
-      {/* Mostrar el Header */}
+      <Header onLogout={handleLogout}/>
+      <br></br><br />
       <h2 className="mb-4">Lista de Usuarios</h2>
 
       {/* Añadir componente de búsqueda */}
@@ -163,7 +175,7 @@ const HomeAdmin = () => {
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           content: {
-            top: "150px", // Ajusta el valor según la altura de tu header
+            top: "150px",
             left: "50%",
             width: "70vw",
             right: "auto",
@@ -185,7 +197,7 @@ const HomeAdmin = () => {
             cursor: "pointer",
           }}
         >
-          &times; {/* El carácter de "X" */}
+          &times;
         </button>
 
         <h2 className="text-center">Editar Usuario</h2>
@@ -234,7 +246,8 @@ const HomeAdmin = () => {
           </button>
         </form>
       </Modal>
-      <ToastContainer /> {/* Componente para manejar las notificaciones */}
+
+      <ToastContainer />
     </div>
   );
 };
