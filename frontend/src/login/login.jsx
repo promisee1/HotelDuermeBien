@@ -4,12 +4,12 @@ import axios from "axios";
 import "./login.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-
 import Logo from '../assets/logo.png';  // Ajusta la ruta según la ubicación real
+import useBackground from "../assets/useBackground";
 
 function Login({ onLoginSuccess }) {
+
+  useBackground("/src/assets/Login.jpg")
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
