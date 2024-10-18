@@ -1,55 +1,69 @@
 import React, { useState, useEffect } from "react";
+>>>>>> Benja_Caballero
 import { useNavigate } from "react-router-dom";
 import Header from "./header.jsx"; // Importar el Header
+=======
+import Header from "./header.jsx"; 
+======= avances
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Modal from "react-modal"; // Asegúrate de tener instalado react-modal
+import Modal from "react-modal"; 
+import useBackground from "../assets/useBackground.jsx";
+import './admin.css'; 
 
-Modal.setAppElement("#root"); // Esto es necesario para accesibilidad en modales
+Modal.setAppElement("#root");
 
+>>>>>> Benja_Caballero
 const HomeAdmin = ( { onLogout} ) => {
   const navigate = useNavigate();
-  const [usuarios, setUsuarios] = useState([]);
-  const [selectedUsuario, setSelectedUsuario] = useState(null); // Usuario seleccionado para editar
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal
+=======
+const HomeAdmin = () => {
+  useBackground('/src/assets/homeAdmin.webp');
 
-  // Obtener la lista de usuarios desde la API cuando el componente cargue
+======= avances
+  const [usuarios, setUsuarios] = useState([]);
+  const [selectedUsuario, setSelectedUsuario] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const loggedUserId = localStorage.getItem('loggedUserId'); // Obtener el ID del usuario logueado desde el localStorage
+
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/usuarios"
-        ); // Cambia la ruta si es necesario
+        const response = await axios.get("http://localhost:5000/api/auth/usuarios");
         setUsuarios(response.data);
+        toast.success("Lista de usuarios actualizada");
+        
       } catch (error) {
         console.error("Error al obtener los usuarios:", error);
         toast.error("Error al obtener la lista de usuarios");
       }
     };
-
     fetchUsuarios();
   }, []);
 
-  // Función para eliminar un usuario de la API
   const eliminarUsuario = async (id) => {
+    if (id.toString() === loggedUserId) {
+      toast.error("No puedes eliminarte a ti mismo");
+      return;
+    }
+    
     try {
-      await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`); // Asegúrate de que la ruta sea correcta
-      // Filtra el usuario eliminado de la lista de usuarios
+      await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`);
       setUsuarios(usuarios.filter((usuario) => usuario.id_usuario !== id));
-
-      // Mostrar mensaje de éxito
       toast.success("Usuario eliminado con éxito");
-
-      
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
       toast.error("Error al eliminar el usuario");
     }
   };
 
-  // Función para manejar la eliminación de usuario con confirmación
   const handleDelete = (id) => {
+    if (id.toString() === loggedUserId) {
+      toast.error("No puedes eliminarte a ti mismo");
+      return;
+    }
+
     toast(
       ({ closeToast }) => (
         <div>
@@ -57,8 +71,8 @@ const HomeAdmin = ( { onLogout} ) => {
           <button
             className="btn btn-danger me-2"
             onClick={() => {
-              eliminarUsuario(id); // Llama a la función de eliminación
-              closeToast(); // Cierra el toast
+              eliminarUsuario(id);
+              closeToast();
             }}
           >
             Confirmar
@@ -68,46 +82,37 @@ const HomeAdmin = ( { onLogout} ) => {
           </button>
         </div>
       ),
-      { autoClose: false } // Para que no se cierre automáticamente hasta que el usuario elija
+      { autoClose: false }
     );
   };
 
-  // Función para manejar la edición de usuario
   const handleEdit = (usuario) => {
-    setSelectedUsuario(usuario); // Guarda el usuario seleccionado
-    setIsModalOpen(true); // Abre el modal
+    setSelectedUsuario(usuario);
+    setIsModalOpen(true);
   };
 
-  // Función para guardar los cambios del usuario editado
   const editarUsuario = async () => {
     try {
-      // Enviamos solo los datos que deben actualizarse
       await axios.put(`http://localhost:5000/api/auth/usuarios/${selectedUsuario.id_usuario}`, {
         nombre_usuario: selectedUsuario.nombre_usuario,
         email: selectedUsuario.email,
         rol: selectedUsuario.rol,
       });
-  
-      // Actualizamos la lista de usuarios localmente
       setUsuarios(
         usuarios.map((usuario) =>
           usuario.id_usuario === selectedUsuario.id_usuario
-            ? { ...usuario, ...selectedUsuario } // Actualizamos solo los datos necesarios
+            ? { ...usuario, ...selectedUsuario }
             : usuario
         )
       );
-  
       toast.success("Usuario actualizado con éxito");
-      setIsModalOpen(false); // Cerramos el modal después de la edición
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error al editar el usuario:", error);
       toast.error("Error al editar el usuario");
     }
   };
-  
-  
 
-  // Manejar el cambio de los campos del formulario de edición
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSelectedUsuario({ ...selectedUsuario, [name]: value });
@@ -119,58 +124,64 @@ const HomeAdmin = ( { onLogout} ) => {
   };
 
   return (
+>>>>>>Benja_Caballero
     <div className="container mt-5">
       <Header onLogout={handleLogout}/>
       <br></br><br />
       {/* Mostrar el Header */}
+=======
+    <div className="container mt-5 mb-5 contenedor">
+      <Header />
+      <br /><br />
+======= avances
       <h2 className="mb-4">Lista de Usuarios</h2>
-      {/* Mostrar la tabla con los usuarios */}
-      <table className="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Contraseña</th>
-            <th>Acciones</th> {/* Columna para las acciones */}
-          </tr>
-        </thead>
-        <tbody>
-          {usuarios.map((usuario) => (
-            <tr key={usuario.id_usuario}>
-              <td>{usuario.id_usuario}</td>
-              <td>{usuario.nombre_usuario}</td>
-              <td>{usuario.email}</td>
-              <td>{usuario.rol}</td>
-              <td>{usuario.contrasena}</td>
-              <td>
-                {/* Íconos de edición y eliminación */}
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => handleEdit(usuario)}
-                >
-                  <i className="bi bi-pencil-square"></i>{" "}
-                  {/* Icono de editar */}
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(usuario.id_usuario)}
-                >
-                  <i className="bi bi-trash"></i> {/* Icono de eliminar */}
-                </button>
-              </td>
+
+      <div className="table-responsive">
+        <table className="table table-bordered table-custom">
+          <thead className="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Contraseña</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {/* Modal para editar usuario */}
+          </thead>
+          <tbody>
+            {usuarios.map((usuario) => (
+              <tr key={usuario.id_usuario}>
+                <td>{usuario.id_usuario}</td>
+                <td>{usuario.nombre_usuario}</td>
+                <td>{usuario.email}</td>
+                <td>{usuario.rol}</td>
+                <td>{usuario.contrasena}</td>
+                <td>
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => handleEdit(usuario)}
+                  >
+                    <i className="bi bi-pencil-square"></i>
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(usuario.id_usuario)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           content: {
-            top: "150px", // Ajusta el valor según la altura de tu header
+            top: "150px",
             left: "50%",
             width: "70vw",
             right: "auto",
@@ -192,7 +203,7 @@ const HomeAdmin = ( { onLogout} ) => {
             cursor: "pointer",
           }}
         >
-          &times; {/* El carácter de "X" */}
+          &times;
         </button>
 
         <h2 className="text-center">Editar Usuario</h2>
@@ -241,7 +252,8 @@ const HomeAdmin = ( { onLogout} ) => {
           </button>
         </form>
       </Modal>
-      <ToastContainer /> {/* Componente para manejar las notificaciones */}
+
+      <ToastContainer />
     </div>
   );
 };
