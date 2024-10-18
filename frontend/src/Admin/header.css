@@ -1,17 +1,18 @@
 
   .navbar {
-    background: linear-gradient(to left, #ffa500, #ffffff);
+    background: linear-gradient(to right, #ffa500, #ffffff);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   .nav-link {
     font-weight: bold;
-    color: #fff !important;
+    color: #ff4500 !important;
     transition: background-color 0.3s ease;
   }
   
   .nav-link:hover {
     background-color: #ff4500;
+    color: #ffffff !important;
     border-radius: 5px;
   }
   
