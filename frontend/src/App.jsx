@@ -7,7 +7,10 @@ import HomeRecepcionista from './Recepcionista/HomeRecepcionista';
 import Login from './login/login';
 import './App.css';
 
+
 function App() {
+  
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState('');
 

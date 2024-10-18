@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import Usuario from '../models/usuarios.js';
 
 
+
 //Consulta Login
 export const login = async (req, res) => {
 
@@ -92,21 +93,29 @@ export const getAllUsuarios = async (req, res) => {
 };
 
 
+// Obtener el ID del usuario logueado a través del token de autenticación
+// Controlador para eliminar un usuario
 export const eliminarUsuario = async (req, res) => {
-  const { id } = req.params;  // Obtener el id desde la URL
   try {
-    // Lógica para eliminar usuario
-    const result = await Usuario.destroy({ where: { id_usuario: id } });  // Verifica que 'id_usuario' sea la columna correcta
+    const idUsuarioAEliminar = req.params.id; // El ID del usuario que se intenta eliminar
+    const idUsuarioLogueado = req.user.id; // ID del usuario autenticado (debe estar en req.user gracias a verifyToken)
 
-    if (result === 0) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+    // Verificar si el usuario intenta eliminarse a sí mismo
+    if (idUsuarioAEliminar === idUsuarioLogueado.toString()) {
+      return res.status(403).json({ message: "No puedes eliminarte a ti mismo" });
     }
 
-    return res.status(200).json({ message: 'Usuario eliminado exitosamente' });
+    // Si no es el mismo usuario, procede con la eliminación
+    await Usuario.destroy({ where: { id_usuario: idUsuarioAEliminar } });
+
+    res.json({ message: "Usuario eliminado con éxito" });
   } catch (error) {
-    return res.status(500).json({ message: 'Error en el servidor', error });
+    console.error("Error al eliminar el usuario:", error);
+    res.status(500).json({ message: "Error al eliminar el usuario" });
   }
 };
+
+
 export const updateUsuario = async (req, res) => {
   const { id } = req.params;
   const { nombre_usuario, email, rol } = req.body; // No incluimos la contraseña aquí
