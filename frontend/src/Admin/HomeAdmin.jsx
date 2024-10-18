@@ -1,29 +1,22 @@
 import React, { useState, useEffect } from "react";
->>>>>> Benja_Caballero
 import { useNavigate } from "react-router-dom";
 import Header from "./header.jsx"; // Importar el Header
-=======
-import Header from "./header.jsx"; 
-======= avances
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Busqueda from './Busqueda'; // Importar el componente de búsqueda
 import Modal from "react-modal"; 
 import useBackground from "../assets/useBackground.jsx";
 import './admin.css'; 
 
 Modal.setAppElement("#root");
 
->>>>>> Benja_Caballero
-const HomeAdmin = ( { onLogout} ) => {
+const HomeAdmin = ({ onLogout }) => {
   const navigate = useNavigate();
-=======
-const HomeAdmin = () => {
   useBackground('/src/assets/homeAdmin.webp');
-
-======= avances
   const [usuarios, setUsuarios] = useState([]);
-  const [selectedUsuario, setSelectedUsuario] = useState(null);
+  const [usuariosFiltrados, setUsuariosFiltrados] = useState([]); // Añadir estado para usuarios filtrados
+  const [selectedUsuario, setSelectedUsuario] = useState(null); // Usuario seleccionado para editar
   const [isModalOpen, setIsModalOpen] = useState(false);
   const loggedUserId = localStorage.getItem('loggedUserId'); // Obtener el ID del usuario logueado desde el localStorage
 
@@ -32,8 +25,8 @@ const HomeAdmin = () => {
       try {
         const response = await axios.get("http://localhost:5000/api/auth/usuarios");
         setUsuarios(response.data);
+        setUsuariosFiltrados(response.data); // Inicializar los usuarios filtrados con todos los usuarios
         toast.success("Lista de usuarios actualizada");
-        
       } catch (error) {
         console.error("Error al obtener los usuarios:", error);
         toast.error("Error al obtener la lista de usuarios");
@@ -49,8 +42,11 @@ const HomeAdmin = () => {
     }
     
     try {
-      await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`);
+      await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`); // Asegúrate de que la ruta sea correcta
       setUsuarios(usuarios.filter((usuario) => usuario.id_usuario !== id));
+      setUsuariosFiltrados(
+        usuariosFiltrados.filter((usuario) => usuario.id_usuario !== id)
+      );
       toast.success("Usuario eliminado con éxito");
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
@@ -98,6 +94,7 @@ const HomeAdmin = () => {
         email: selectedUsuario.email,
         rol: selectedUsuario.rol,
       });
+
       setUsuarios(
         usuarios.map((usuario) =>
           usuario.id_usuario === selectedUsuario.id_usuario
@@ -124,58 +121,55 @@ const HomeAdmin = () => {
   };
 
   return (
->>>>>>Benja_Caballero
     <div className="container mt-5">
       <Header onLogout={handleLogout}/>
       <br></br><br />
-      {/* Mostrar el Header */}
-=======
-    <div className="container mt-5 mb-5 contenedor">
-      <Header />
-      <br /><br />
-======= avances
       <h2 className="mb-4">Lista de Usuarios</h2>
 
-      <div className="table-responsive">
-        <table className="table table-bordered table-custom">
-          <thead className="table-light">
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Contraseña</th>
-              <th>Acciones</th>
+      {/* Añadir componente de búsqueda */}
+      <Busqueda usuarios={usuarios} setUsuariosFiltrados={setUsuariosFiltrados} />
+      <table className=" mt-3 table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Contraseña</th>
+            <th>Acciones</th> {/* Columna para las acciones */}
+          </tr>
+        </thead>
+        <tbody>
+          {/* Usar usuarios filtrados en lugar de todos los usuarios */}
+          {usuariosFiltrados.map((usuario) => (
+            <tr key={usuario.id_usuario}>
+              <td>{usuario.id_usuario}</td>
+              <td>{usuario.nombre_usuario}</td>
+              <td>{usuario.email}</td>
+              <td>{usuario.rol}</td>
+              <td>{usuario.contrasena}</td>
+              <td>
+                {/* Íconos de edición y eliminación */}
+                <button
+                  className="btn btn-warning btn-sm me-2"
+                  onClick={() => handleEdit(usuario)}
+                >
+                  <i className="bi bi-pencil-square"></i>{" "}
+                  {/* Icono de editar */}
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDelete(usuario.id_usuario)}
+                >
+                  <i className="bi bi-trash"></i> {/* Icono de eliminar */}
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {usuarios.map((usuario) => (
-              <tr key={usuario.id_usuario}>
-                <td>{usuario.id_usuario}</td>
-                <td>{usuario.nombre_usuario}</td>
-                <td>{usuario.email}</td>
-                <td>{usuario.rol}</td>
-                <td>{usuario.contrasena}</td>
-                <td>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => handleEdit(usuario)}
-                  >
-                    <i className="bi bi-pencil-square"></i>
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(usuario.id_usuario)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
 
+      {/* Modal para editar usuario */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
