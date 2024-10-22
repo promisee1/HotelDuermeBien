@@ -1,36 +1,5 @@
-body {
-    background: url('/src/Components/Assets/img/palladium-hotel-ibiza.jpg') no-repeat center center;
-    background-size: cover;
-    padding-top: 0%;
-}
 
 .custom-form {
-    background: linear-gradient(to bottom, #ffcc80, rgb(227, 226, 223)); /* Degradado de color */
+    background: #231f20; /* Degradado de color */
     z-index: 1;
 }
-
-.btn-dark {
-    width: 100%;
-    border: none;
-}
-
-.forgot-password {
-    color: #333;
-    text-decoration: none;
-}
-
-.forgot-password:hover {
-    text-decoration: underline;
-    color: #555;
-}
-
-.form-control {
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    padding: 10px;
-}
-.custom-checkbox:checked {
-        background-color: #000000 !important; 
-        border-color: #000000 !important;
-    }
-

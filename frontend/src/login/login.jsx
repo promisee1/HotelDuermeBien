@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Logo from '../assets/logo.png';  // Ajusta la ruta según la ubicación real
+import Logo1 from "../assets/Logo1.jpeg";
 import useBackground from "../assets/useBackground";
+import useCss from "../assets/useCss";
+import './login.css';
 
 function Login({ onLoginSuccess }) {
-
-  useBackground("/src/assets/Login.jpg")
+  useCss();
+  useBackground("/src/assets/Login.jpg");
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
@@ -28,59 +29,86 @@ function Login({ onLoginSuccess }) {
 
       if (data.success) {
         console.log("Autenticación exitosa:", data);
-        onLoginSuccess(data);  // Enviar `data` completo
+        onLoginSuccess(data);
         toast.success("Autenticación exitosa");
       } else {
         setError(data.message || "Error de autenticación");
         toast.error("Error de autenticación");
       }
     } catch (error) {
-      console.error("Error en la petición:", error.response?.data || error.message);
+      console.error(
+        "Error en la petición:",
+        error.response?.data || error.message
+      );
       setError("Error de servidor o de conexión");
       toast.error("Error de servidor o de conexión");
     }
   };
 
   return (
-    <div className="container d-flex align-items-center justify-content-center vh-100">
-      <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-        {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleSubmit} className="p-4 shadow rounded custom-form">
-          <img src={Logo} className="d-block mx-auto mb-4" alt="Logo"/>
+    <div className="container ">
+      {/* Outer Row */}
+      <div className="row justify-content-center">
+        <div className="col-xl-10 col-lg-12 col-md-9">
+          <div className="card o-hidden border-0 shadow-lg my-5">
+            <div className="card-body p-0">
+              {/* Nested Row within Card Body */}
+              <div className="row custom-form">
+                {/* Columna para el formulario */}
+                <div className="col-lg-12 my-5 ">
+                  <div className="px-5">
+                    <div className="text-center">
+                      <img
+                        src={Logo1}
+                        alt="Hotel Duerme Bien"
+                        className="img-fluid mb-4"
+                        style={{ width: "20%" }}
+                      />
+                      <h1 className="h1 text-white font-weight-light font-weight-bold mb-4">Iniciar Sesión</h1>
+                    </div>
+                    <form className="user form" onSubmit={handleSubmit}>
+                      <div className="form-group mb-3">
+                        <input
+                          type="email"
+                          className="form-control form-control-user"
+                          id="exampleInputEmail"
+                          aria-describedby="emailHelp"
+                          placeholder="Correo electrónico"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="password"
+                          className="form-control form-control-user"
+                          id="exampleInputPassword"
+                          placeholder="Contraseña"
+                          value={contrasena}
+                          onChange={(e) => setContrasena(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-user btn-block "
 
-          <h4 className="text-center mb-4">Iniciar Sesión</h4>
-          <div className="mb-3">
-            <label htmlFor="inputEmail" className="form-label">
-              Correo del usuario
-            </label>
-            <input
-              type="email"
-              className="form-control"
-              id="inputEmail"
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              required
-            />
+                      >
+                        Iniciar Sesión
+                      </button>
+                      <hr />
+                    </form>
+                    {error && (
+                      <div className="alert alert-danger mt-3">{error}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="mb-3">
-            <label htmlFor="inputContraseña" className="form-label">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              className="form-control"
-              onChange={(e) => setContrasena(e.target.value)}
-              value={contrasena}
-              id="inputContraseña"
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-dark w-100 mb-4">
-            Iniciar Sesión
-          </button>
-        </form>
+        </div>
       </div>
-
       <ToastContainer />
     </div>
   );
