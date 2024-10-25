@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import "./login.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-
-import Logo from '../assets/logo.png';  // Ajusta la ruta según la ubicación real
+import axios from "axios";
+import Logo from "../assets/logodb.png"; 
+import "./login.css"; 
+import bglogin from "../assets/bglogin.png";
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -28,7 +25,7 @@ function Login({ onLoginSuccess }) {
 
       if (data.success) {
         console.log("Autenticación exitosa:", data);
-        onLoginSuccess(data);  // Enviar `data` completo
+        onLoginSuccess(data); // Enviar `data` completo
         toast.success("Autenticación exitosa");
       } else {
         setError(data.message || "Error de autenticación");
@@ -46,7 +43,12 @@ function Login({ onLoginSuccess }) {
       <div className="col-12 col-md-8 col-lg-6 col-xl-5">
         {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleSubmit} className="p-4 shadow rounded custom-form">
-          <img src={Logo} className="d-block mx-auto mb-4" alt="Logo"/>
+          
+          <img 
+            src={Logo} 
+            className="logo d-block mx-auto my-4" 
+            alt="Logo"
+          />
 
           <h4 className="text-center mb-4">Iniciar Sesión</h4>
           <div className="mb-3">
@@ -69,9 +71,9 @@ function Login({ onLoginSuccess }) {
             <input
               type="password"
               className="form-control"
+              id="inputContraseña"
               onChange={(e) => setContrasena(e.target.value)}
               value={contrasena}
-              id="inputContraseña"
               required
             />
           </div>

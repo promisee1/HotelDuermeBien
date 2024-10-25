@@ -1,36 +1,66 @@
+
+
 body {
-    background: url('/src/Components/Assets/img/palladium-hotel-ibiza.jpg') no-repeat center center;
+    background: url('../assets/bglogin.png') no-repeat center center;
     background-size: cover;
-    padding-top: 0%;
+    margin: 0;
+    padding: 0;
 }
 
-.custom-form {
-    background: linear-gradient(to bottom, #ffcc80, rgb(227, 226, 223)); /* Degradado de color */
+
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo del formulario */
+.custom-form {  
+    background-color: #000000b6;
     z-index: 1;
+    color: #fffff3;
 }
 
+
+
+/* Ajustes del logo */
+.logo {
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+/* Botón de inicio de sesión */
 .btn-dark {
     width: 100%;
     border: none;
 }
 
+/* Estilo de la contraseña olvidada */
 .forgot-password {
-    color: #333;
+    color: #fffff3;
     text-decoration: none;
 }
 
 .forgot-password:hover {
     text-decoration: underline;
-    color: #555;
+    color: #afa7a7;
 }
 
+/* Estilo del input */
 .form-control {
     border-radius: 5px;
     border: 1px solid #ccc;
     padding: 10px;
+    background-color: #fff;
+    color: #231f20;
 }
-.custom-checkbox:checked {
-        background-color: #000000 !important; 
-        border-color: #000000 !important;
-    }
 
+/* Checkbox personalizado */
+.custom-checkbox:checked {
+    background-color: #000000 !important; 
+    border-color: #000000 !important;
+}
