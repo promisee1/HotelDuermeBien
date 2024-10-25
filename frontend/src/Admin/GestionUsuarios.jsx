@@ -284,6 +284,13 @@ const GestionUsuarios = () => {
               pagination
               search
               highlightOnHover
+              noDataComponent={
+                <div style={{ textAlign: 'center', padding: '30px', backgroundColor: '#fff', borderRadius: '5px' }}>
+                  No se encontraron usuarios que coincidan
+                </div>
+              }
+          
+
             />
           </DataTableExtensions>
 

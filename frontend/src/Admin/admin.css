@@ -45,3 +45,6 @@
   }
 }
 
+input.filter-text {
+  color: #ffffff !important; /* Cambia este valor por el color que desees */
+}

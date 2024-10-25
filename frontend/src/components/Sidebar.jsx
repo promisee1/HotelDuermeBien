@@ -33,13 +33,20 @@ const Sidebar = ({ onLogout }) => {
       <hr className="sidebar-divider my-4" />
 
       {/* Opciones del sidebar */}
+      <li className="nav-item">
+        <Link className="nav-link" to="/admin">
+          <i className="fas fa-cogs"></i>
+          <span>Dashboard</span>
+        </Link>
+      </li>
+
       <li className="nav-item mt-1">
         <Link className="nav-link" to="/admin/users">
           <i className="fas fa-users-cog"></i>
           <span>Gestionar Usuarios</span>
         </Link>
       </li>
-
+      
       <li className="nav-item">
         <Link className="nav-link" to="/admin/profile">
           <i className="fas fa-cogs"></i>
