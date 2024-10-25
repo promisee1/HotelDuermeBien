@@ -29,7 +29,11 @@ function Login({ onLoginSuccess }) {
 
       if (data.success) {
         console.log("Autenticación exitosa:", data);
-        onLoginSuccess(data);
+        
+        // Guardar el nombre de usuario en localStorage
+        localStorage.setItem('nombre_usuario', data.user.nombre_usuario);
+        
+        onLoginSuccess(data); // Llamada al callback después del login
         toast.success("Autenticación exitosa");
       } else {
         setError(data.message || "Error de autenticación");
@@ -47,14 +51,11 @@ function Login({ onLoginSuccess }) {
 
   return (
     <div className="container ">
-      {/* Outer Row */}
       <div className="row justify-content-center">
         <div className="col-xl-10 col-lg-12 col-md-9">
           <div className="card o-hidden border-0 shadow-lg my-5">
             <div className="card-body p-0">
-              {/* Nested Row within Card Body */}
               <div className="row custom-form">
-                {/* Columna para el formulario */}
                 <div className="col-lg-12 my-5 ">
                   <div className="px-5">
                     <div className="text-center">
@@ -92,7 +93,7 @@ function Login({ onLoginSuccess }) {
                       </div>
                       <button
                         type="submit"
-                        className="btn btn-primary btn-user btn-block "
+                        className="btn btn-primary btn-user btn-block mt-4"
 
                       >
                         Iniciar Sesión
