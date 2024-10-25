@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './headerRecepcionista.css';
-import Logo from '../assets/logo.png';
 
 
 const HeaderRecepcionista = ({ onLogout }) => {
@@ -17,7 +16,7 @@ const HeaderRecepcionista = ({ onLogout }) => {
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            <img src={Logo} alt="Logo" width="100" height="50" className='ms-3 align-top'/>
+           
           </Link>
           <button
             className="navbar-toggler"

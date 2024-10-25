@@ -5,6 +5,7 @@
         "start": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\""
     },
     "dependencies": {
+        "@popperjs/core": "^2.11.8",
         "axios": "^1.7.7",
         "concurrently": "^9.0.1"
     }
