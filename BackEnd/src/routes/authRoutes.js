@@ -11,14 +11,17 @@ router.post('/register', register);
 // Ruta de inicio de sesión (pública)
 router.post('/login', login);
 
+// Obtener todos los usuarios (protegiendo la ruta con el middleware de autenticación)
 router.get('/usuarios', getAllUsuarios);
 
-router.delete('/usuarios/:id', eliminarUsuario);
+// Ruta protegida para eliminar un usuario
+router.delete('/usuarios/:id',  eliminarUsuario);
 
+// Ruta protegida para actualizar un usuario
 router.put('/usuarios/:id', updateUsuario);
 
-// Rutas protegidas (ejemplo de ruta protegida)
-router.get('/perfil', verifyToken, (req, res) => {
+// Ruta protegida para obtener el perfil del usuario autenticado
+router.get('/perfil', (req, res) => {
   // Solo se puede acceder si el token es válido
   res.json({ message: `Bienvenido usuario con ID: ${req.user.id}` });
 });

@@ -7,6 +7,8 @@ import "./login.css";
 import bglogin from "../assets/bglogin.png";
 
 function Login({ onLoginSuccess }) {
+
+  useBackground("/src/assets/Login.jpg")
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
