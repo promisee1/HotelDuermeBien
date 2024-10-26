@@ -1,5 +1,62 @@
-
-.custom-form {
-    background: #231f20; /* Degradado de color */
-    z-index: 1;
+body {
+    background: url('../assets/bglogin.png') no-repeat center center;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
 }
+
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo del formulario */
+.custom-form {  
+    background-color: #000000b6;
+    z-index: 1;
+    color: #fffff3;
+}
+
+/* Ajustes del logo */
+.logo {
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+/* Botón de inicio de sesión */
+.btn-dark {
+    width: 100%;
+    border: none;
+}
+
+/* Estilo de la contraseña olvidada */
+.forgot-password {
+    color: #fffff3;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+    color: #afa7a7;
+}
+
+/* Estilo del input */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    color: #231f20;
+}
+
+/* Checkbox personalizado */
+.custom-checkbox:checked {
+    background-color: #000000 !important; 
+    border-color: #000000 !important;
+}
+
