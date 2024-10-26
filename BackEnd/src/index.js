@@ -5,7 +5,9 @@ import router from './routes/authRoutes.js';
 
 // Configuración de CORS para permitir solicitudes desde tu frontend
 
+// Variable de entorno express
 const app = express();
+// Variable de puerto predeterminado para el servidor 
 const PORT = 5000;
 
 // Configuración de CORS para permitir solicitudes desde tu frontend
@@ -14,6 +16,7 @@ app.use(cors({
   credentials: false,  // Permitir envío de credenciales (como cookies o sesiones)
 }));
 
+// App usará el bodyparser para transformar los datos en archivos entendibles para el ORM
 app.use(bodyParser.json());
 
 // Rutas de autenticación

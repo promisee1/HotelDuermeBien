@@ -7,8 +7,6 @@ import "./login.css";
 import bglogin from "../assets/bglogin.png";
 
 function Login({ onLoginSuccess }) {
-
-  useBackground("/src/assets/Login.jpg")
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
@@ -34,7 +32,10 @@ function Login({ onLoginSuccess }) {
         toast.error("Error de autenticación");
       }
     } catch (error) {
-      console.error("Error en la petición:", error.response?.data || error.message);
+      console.error(
+        "Error en la petición:",
+        error.response?.data || error.message
+      );
       setError("Error de servidor o de conexión");
       toast.error("Error de servidor o de conexión");
     }
@@ -51,11 +52,10 @@ function Login({ onLoginSuccess }) {
             className="logo d-block mx-auto my-4" 
             alt="Logo"
           />
-
-          <h4 className="text-center mb-4">Iniciar Sesión</h4>
+          
           <div className="mb-3">
             <label htmlFor="inputEmail" className="form-label">
-              Correo del usuario
+              Correo electrónico
             </label>
             <input
               type="email"
@@ -66,6 +66,7 @@ function Login({ onLoginSuccess }) {
               required
             />
           </div>
+          
           <div className="mb-3">
             <label htmlFor="inputContraseña" className="form-label">
               Contraseña
@@ -79,13 +80,15 @@ function Login({ onLoginSuccess }) {
               required
             />
           </div>
-          <button type="submit" className="btn btn-dark w-100 mb-4">
+          
+          <button type="submit" className="btn btn-dark w-100">
             Iniciar Sesión
           </button>
+          
+          <hr />
         </form>
+        {error && <div className="alert alert-danger mt-3">{error}</div>}
       </div>
-
-      <ToastContainer />
     </div>
   );
 }

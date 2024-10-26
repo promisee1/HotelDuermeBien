@@ -1,12 +1,9 @@
-
-
 body {
     background: url('../assets/bglogin.png') no-repeat center center;
     background-size: cover;
     margin: 0;
     padding: 0;
 }
-
 
 .container {
     height: 100vh;
@@ -21,8 +18,6 @@ body {
     z-index: 1;
     color: #fffff3;
 }
-
-
 
 /* Ajustes del logo */
 .logo {
@@ -64,3 +59,4 @@ body {
     background-color: #000000 !important; 
     border-color: #000000 !important;
 }
+

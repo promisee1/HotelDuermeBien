@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { register, login, eliminarUsuario, updateUsuario } from '../controllers/authControllers.js';
-import { verifyToken } from '../controllers/authMiddleware.js';  // Importar el middleware de autenticación
 import { getAllUsuarios } from '../controllers/authControllers.js';
 
 const router = Router();
@@ -22,7 +21,6 @@ router.put('/usuarios/:id', updateUsuario);
 
 // Ruta protegida para obtener el perfil del usuario autenticado
 router.get('/perfil', (req, res) => {
-  // Solo se puede acceder si el token es válido
   res.json({ message: `Bienvenido usuario con ID: ${req.user.id}` });
 });
 

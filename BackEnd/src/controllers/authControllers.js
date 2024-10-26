@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken'; 
 import Usuario from '../models/usuarios.js';
 
 
@@ -6,19 +5,21 @@ import Usuario from '../models/usuarios.js';
 //Consulta Login
 export const login = async (req, res) => {
 
+  // Variables requeridas desde el frontend para validación del login
   const { email, contrasena } = req.body;
-  // Verificar que todos los valores este definido
+
+  // Verificar que todos los valores estén definidos
   if (!email || !contrasena) {
     return res.status(400).json({ success: false, message: "Todos los campos son obligatorios" });
   }
 
-  //Quita todos los espacios 
+  //Quita todos los espacios para evitar errores de escritura
   const emailNormalizado = email.trim().toLowerCase();
 
 
   try {
-    // Buscar el usuario en la base de datos usando Sequelize
-    const user = await Usuario.findOne({ where: { email: emailNormalizado } });
+    // Buscar el usuario en la base de datos usando findOne cuando el email coincida
+    const user = await Usuario.findOne({ where: { email: emailNormalizado} });
 
     // Si no se encuentra el usuario o no corresponde a este
     if (!user) {
@@ -28,12 +29,8 @@ export const login = async (req, res) => {
     // Comparar la contraseña ingresada con la almacenada en la base de datos
     if (contrasena === user.contrasena) {  // Si no estás usando bcrypt
 
-      // Generar el token JWT
-      const token = jwt.sign({ id: user.id_usuario, rol: user.rol }, 'clave_secreta', { expiresIn: '1h' });  // Cambia 'clave_secreta' por una clave segura
-
       return res.status(200).json({
         success: true,
-        token,  // Devuelve el token al cliente
         user: {
           id_usuario: user.id_usuario,
           nombre_usuario: user.nombre_usuario,
@@ -53,6 +50,7 @@ export const login = async (req, res) => {
 
 //Consulta Insertar Usuario (registrar)
 export const register = async (req, res) => {
+  //Variables desde el frontend para añadir un usuario
   const { nombre_usuario, email, contrasena, rol } = req.body;
   console.log({ nombre_usuario, email, contrasena, rol });
 
@@ -62,7 +60,7 @@ export const register = async (req, res) => {
   }
 
   try {
-    // Crear un nuevo usuario usando Sequelize
+    // Crear un nuevo usuario usando create
     const newUser = await Usuario.create({
       nombre_usuario,
       email,
@@ -96,17 +94,18 @@ export const getAllUsuarios = async (req, res) => {
 // Obtener el ID del usuario logueado a través del token de autenticación
 // Controlador para eliminar un usuario
 export const eliminarUsuario = async (req, res) => {
+  // Variable requerida para comparar
+  const { id } = req.params;
+  
   try {
-    const idUsuarioAEliminar = req.params.id; // El ID del usuario que se intenta eliminar
-    const idUsuarioLogueado = req.user.id; // ID del usuario autenticado (debe estar en req.user gracias a verifyToken)
+     // El ID del usuario que se intenta eliminar
 
-    // Verificar si el usuario intenta eliminarse a sí mismo
-    if (idUsuarioAEliminar === idUsuarioLogueado.toString()) {
-      return res.status(403).json({ message: "No puedes eliminarte a ti mismo" });
+    // Procede con la eliminación del usuario
+    const resultado = await Usuario.destroy({ where: { id_usuario: id } });
+
+    if (resultado === 0) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
     }
-
-    // Si no es el mismo usuario, procede con la eliminación
-    await Usuario.destroy({ where: { id_usuario: idUsuarioAEliminar } });
 
     res.json({ message: "Usuario eliminado con éxito" });
   } catch (error) {
@@ -116,17 +115,21 @@ export const eliminarUsuario = async (req, res) => {
 };
 
 
+//Controlador de actualizar usuario
 export const updateUsuario = async (req, res) => {
+  // Variable requerida para comparar
   const { id } = req.params;
+  // Variables desde el frontend para actualizar el usuario
   const { nombre_usuario, email, rol } = req.body; // No incluimos la contraseña aquí
 
   try {
+    //Consulta findByPk en este caso la primary key es la ID del usuario
     const usuario = await Usuario.findByPk(id); // Busca al usuario por ID
     if (!usuario) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    // Actualiza los datos del usuario, excepto la contraseña
+    // Si encuentra al usuario actualiza los datos del usuario, excepto la contraseña
     await usuario.update({
       nombre_usuario: nombre_usuario || usuario.nombre_usuario,
       email: email || usuario.email,

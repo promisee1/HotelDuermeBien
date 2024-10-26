@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import HomeAdmin from './Admin/HomeAdmin';
-import AdminAddUser from './Admin/AdminAddUser';
 import AdminProfile from './Admin/AdminProfile';
 import HomeRecepcionista from './Recepcionista/HomeRecepcionista';
 import Login from './login/login';
 import './App.css';
+import GestionUsuarios from './Admin/GestionUsuarios';
 
 
 function App() {
@@ -39,12 +39,14 @@ function App() {
   return (
     <Router>
       <Routes>
+        
         {/* Ruta para el Administrador */}
         <Route
           path="/admin/*"
           element={
             isAuthenticated && userRole === 'Administrador' ? (
               <AdminRoutes onLogout={handleLogout} />
+              
             ) : (
               <Navigate to="/" replace />
             )
@@ -88,8 +90,8 @@ function AdminRoutes({ onLogout }) {
   return (
     <Routes>
       <Route path="/" element={<HomeAdmin onLogout={onLogout} />} />
-      <Route path="add-user" element={<AdminAddUser />} />
-      <Route path="profile" element={<AdminProfile onLogout={onLogout} />} />
+      <Route path="/users" element={<GestionUsuarios onLogout={onLogout} />} />
+      <Route path="/profile" element={<AdminProfile onLogout={onLogout} />} />
     </Routes>
   );
 }

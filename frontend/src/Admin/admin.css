@@ -1,98 +1,50 @@
-body {
-    background-color: #f5f5f5; /* Fondo blanco suave */
-  }
-  
-  .form-wrapper {
-    background-color: white; /* Fondo del formulario */
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin: 20px auto; /* Centrar el formulario */
-  }
-  
-  h2 {
-    color: #ff6600; /* Tono cercano a anaranjado */
-    margin-bottom: 20px;
-  }
-  
-  .input-custom {
-    border: 2px solid #ff6600; /* Borde anaranjado */
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 1rem;
-  }
-  
-  .input-custom:focus {
-    outline: none;
-    border-color: #ff8533; /* Borde más claro en foco */
-    box-shadow: 0 0 5px rgba(255, 102, 0, 0.5);
-  }
-  
-  .btn-custom {
-    background-color: #ff6600; /* Botón anaranjado */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-custom:hover {
-    background-color: #ff8533; /* Hover en un tono más claro */
-  }
-  
-  .btn-block {
-    display: block;
-    width: 100%; /* Botón ocupará todo el ancho */
+/* Estilos para el contenedor del DataTable */
+.containerr {
+  background-color: #3a3434;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+/* Estilos para la cabecera de la tabla */
+.data-table-wrapper .data-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #303030;
+  border-bottom: 2px solid #e3e6f0;
+}
+
+/* Botón "Añadir Usuario" alineado a la derecha */
+.add-user-btn {
+  margin-left: auto; /* Empuja el botón hacia la derecha */
+  background-color: #4e73df;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.add-user-btn:hover {
+  background-color: #2e59d9;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  /* Responsivo: Coloca el botón debajo de la barra de búsqueda en pantallas pequeñas */
+  .data-table-wrapper .data-table-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .contenedor{
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  .add-user-btn {
+    margin-top: 10px;
+    width: 100%; /* Hacer que el botón ocupe el ancho completo en pantallas pequeñas */
   }
-  
-  .table-custom {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  .table-custom th {
-    background-color: #ff8533;
-    color: white;
-    text-align: center;
-  }
-  
-  .table-custom td {
-    text-align: center;
-  }
-  
-  .table-responsive {
-    overflow-x: auto;
-  }
-  
-  .btn-warning {
-    background-color: #ffcc00;
-    border: none;
-  }
-  
-  .btn-danger {
-    background-color: #ff6666;
-    border: none;
-  }
-  
-  .btn {
-    border-radius: 5px;
-    padding: 5px 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn:hover {
-    opacity: 0.85;
-  }
-  
+}
+
+input.filter-text {
+  color: #ffffff !important; /* Cambia este valor por el color que desees */
+}

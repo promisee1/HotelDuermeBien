@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa Bootstrap
 import './headerRecepcionista.css'; // Importamos los estilos personalizados del header
 import HeaderRecepcionista from './headerRecepcionista';
+import { useNavigate } from 'react-router-dom';
 
 const habitaciones = [
     { numero: 'B-01', capacidad: 3, estado: 'Ocupada', color: 'success' },
@@ -15,10 +16,18 @@ const habitaciones = [
     { numero: 'B-09', capacidad: 4, estado: 'En mantenimiento', color: 'secondary' },
 ];
 
-const HomeRecepcionista = () => {
+const HomeRecepcionista = ({onLogout}) => {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        onLogout();
+        navigate('/login');
+      };
+
     return (
         <div>
-            <HeaderRecepcionista />
+            <HeaderRecepcionista onLogout={handleLogout}/>
             <div className="container mt-4">
                 <h2 className="text-center mb-4">Listado de habitaciones</h2>
                 <div className="row">
