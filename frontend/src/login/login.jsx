@@ -4,9 +4,10 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import Logo from "../assets/logodb.png"; 
 import "./login.css"; 
-import bglogin from "../assets/bglogin.png";
+import useBackground from "../assets/useBackground";
 
 function Login({ onLoginSuccess }) {
+  useBackground("/src/assets/bglogin.png");
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");

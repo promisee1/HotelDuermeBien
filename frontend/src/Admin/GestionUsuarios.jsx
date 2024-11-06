@@ -1,23 +1,26 @@
+
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import DataTableExtensions from "react-data-table-component-extensions"; // Importar DataTableExtensions
 import DataTable from "react-data-table-component";
-import "react-data-table-component-extensions/dist/index.css"; // Estilos de las extensiones
 import Modal from "react-modal";
 import useBackground from "../assets/useBackground.jsx";
 import "./admin.css";
 import Sidebar from "../components/Sidebar.jsx";
 import TopBar from "../components/TopBar.jsx";
+import useCss from "../assets/useCss.jsx";
 
 Modal.setAppElement("#root");
 
 const GestionUsuarios = () => {
+  useCss();
   const navigate = useNavigate();
   useBackground("/src/assets/homeAdmin.webp");
   const [usuarios, setUsuarios] = useState([]);
+  const [filterText, setFilterText] = useState("");
+  const [pending, setPending] = useState(true);
   const [selectedUsuario, setSelectedUsuario] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
@@ -26,22 +29,7 @@ const GestionUsuarios = () => {
   const [contrasena, setContrasena] = useState("");
   const [rol, setRol] = useState("Recepcionista");
 
-  useEffect(() => {
-    const fetchUsuarios = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/usuarios"
-        );
-        setUsuarios(response.data);
-        toast.success("Lista de usuarios actualizada");
-      } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
-        toast.error("Error al obtener la lista de usuarios");
-      }
-    };
-    fetchUsuarios();
-  }, []);
-
+  // Eliminar usuario
   const eliminarUsuario = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/auth/usuarios/${id}`);
@@ -85,6 +73,7 @@ const GestionUsuarios = () => {
     setIsModalOpen2(true);
   };
 
+  // Editar usuario
   const editarUsuario = async () => {
     try {
       await axios.put(
@@ -121,7 +110,7 @@ const GestionUsuarios = () => {
     navigate("/login");
   };
 
-  // Función para generar una contraseña automática con al menos una letra, un número y un carácter especial
+  // Generar contraseña automática
   const generarContrasena = () => {
     const letras = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const numeros = "0123456789";
@@ -147,22 +136,16 @@ const GestionUsuarios = () => {
       .join(""); // Mezclar los caracteres
   };
 
-  // Generar una contraseña al cargar el componente
   useEffect(() => {
     setContrasena(generarContrasena());
-  }, []); // Se ejecuta solo al montar el componente
+  }, []);
 
-  // Función de validación
+  // Validación
   const validaciones = () => {
     let isValid = true;
 
     if (nombre === "" || email === "") {
       toast.error("Todos los campos son obligatorios");
-      isValid = false;
-    }
-
-    if (contrasena.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
       isValid = false;
     }
 
@@ -179,6 +162,7 @@ const GestionUsuarios = () => {
     return isValid;
   };
 
+  // Añadir usuario
   const handleAddUser = async (e) => {
     e.preventDefault();
 
@@ -206,106 +190,165 @@ const GestionUsuarios = () => {
     }
   };
 
-  // Columnas para la tabla
+  // Fetch de usuarios (solo se llama una vez)
+  const fetchUsuarios = async () => {
+    try {
+      setPending(true);
+      const response = await axios.get("http://localhost:5000/api/auth/usuarios");
+      setUsuarios(response.data);
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      toast.error("Error al obtener la lista de usuarios");
+    } finally {
+      setPending(false);
+    }
+  };
+
+  // Efecto para cargar usuarios y filtrar
+  useEffect(() => {
+    fetchUsuarios();
+  }, []);
+
+  // Filtrado
+  const filteredUsuarios = usuarios.filter(user => {
+    return (
+      user.nombre_usuario?.toLowerCase().includes(filterText.toLowerCase()) ||
+      user.email?.toLowerCase().includes(filterText.toLowerCase()) ||
+      user.rol?.toLowerCase().includes(filterText.toLowerCase())
+    );
+  });
+
   const columns = [
     {
-      name: "ID",
-      selector: (row) => row.id_usuario,
-      sortable: true,
-    },
-    {
       name: "Nombre",
-      selector: (row) => row.nombre_usuario,
+      selector: row => row.nombre_usuario,
       sortable: true,
     },
     {
       name: "Email",
-      selector: (row) => row.email,
+      selector: row => row.email,
+      sortable: true,
     },
     {
       name: "Rol",
-      selector: (row) => row.rol,
+      selector: row => row.rol,
+      sortable: true,
     },
     {
-      name: "Contraseña",
-      selector: (row) => row.contrasena,
+      name: "Contrasena",
+      selector: row => row.contrasena,
+      sortable: true,
     },
     {
       name: "Acciones",
-      cell: (row) => (
-        <>
-          <button className="btn btn-success btn-sm me-2" onClick={handleAdd}>
-            <i className="bi bi-plus"></i>
-          </button>
+      cell: row => (
+        <div className="d-flex justify-content-center text-center">
           <button
-            className="btn btn-warning btn-sm me-2"
             onClick={() => handleEdit(row)}
+            className="btn btn-warning me-2"
           >
             <i className="bi bi-pencil-square"></i>
           </button>
+
           <button
-            className="btn btn-danger btn-sm"
             onClick={() => handleDelete(row.id_usuario)}
+            className="btn btn-danger"
           >
             <i className="bi bi-trash"></i>
           </button>
-        </>
+        </div>
       ),
     },
   ];
 
-  const tableData = {
-    columns,
-    data: usuarios,
-    print: false,
-    download: false,
-    export: false,
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: "72px",
+      },
+    },
+    headCells: {
+      style: {
+        backgroundColor: "#f8f9fa",
+        fontWeight: "bold",
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: "50px",
+        paddingRight: "50px",
+      },
+    },
   };
 
+  const SubHeaderComponent = () => {
+    return (
+      <input
+        type="text"
+        className="form-control me-2"
+        placeholder="Buscar usuarios..."
+        value={filterText}
+        onChange={(e) => setFilterText(e.target.value)}
+        style={{ width: "100%" }}
+      />
+    );
+  };
   return (
-    <div className="d-flex flex-column flex-lg-row">
-      {/* TopBar colocada arriba */}
+    <div className="d-flex">
       <Sidebar onLogout={handleLogout} />
 
-      <div className="flex-grow-1 me-1 ">
-        {/* Sidebar en la izquierda */}
+      <div className=" flex-grow-1 me-1">
         <TopBar onLogout={handleLogout} />
 
-        {/* Contenido principal */}
-        <div className="container containerr mx-auto">
+        <div className="container containerr mx-auto ">
           <br />
-          <h2 className="mb-4 mx-auto text-center font-weight-bold">Lista de Usuarios</h2>
+          <div className="card">
+            <div className="card-body text-end mb-4">
+              <div className=" mb-4">
+                <h2 className="font-weight-bold text-center">Lista de Usuarios</h2>
+               
+              </div>
+                <div className="d-flex justify-content-center mb-2"  >
+                  <SubHeaderComponent />
+               <button
+                  className="btn btn-primary w-50 mb-2"
+                  onClick={handleAdd}
+                >
+                  Añadir Usuario
+                </button>
+              </div>
+              <DataTable
+                columns={columns} // Define las columnas de la tabla
+                data={filteredUsuarios} // Define los datos de la tabla
+                pagination // Habilita la paginación
+                paginationPerPage={10} // Define la cantidad de registros por página
+                paginationRowsPerPageOptions={[10, 20, 30]} // Define las opciones de registros por página
+                customStyles={customStyles} // Estilos personalizados
+                progressPending={pending} // Indica si hay datos pendientes
+                striped // Pone las filas de la tabla de color
+                highlightOnHover // Pone el cursor sobre las filas
+                pointerOnHover // Pone el cursor sobre las filas
 
-          {/* Implementación de DataTable con barra de búsqueda */}
-          <DataTableExtensions {...tableData}>
-            <DataTable
-              columns={columns}
-              data={usuarios}
-              pagination
-              search
-              highlightOnHover
-              noDataComponent={
-                <div style={{ textAlign: 'center', padding: '30px', backgroundColor: '#fff', borderRadius: '5px' }}>
-                  No se encontraron usuarios que coincidan
-                </div>
-              }
-          
+                noDataComponent={
+                  <div className="p-4 text-center">
+                    No se encontraron usuarios que coincidan con la búsqueda.
+                  </div>
 
-            />
-          </DataTableExtensions>
-
-          {/* Modales para edición y adición de usuario (como en tu código original) */}
-          {/* Modal para editar usuario */}
+                }
+              />
+            </div>
+          </div>
           <Modal
             isOpen={isModalOpen}
             onRequestClose={() => setIsModalOpen(false)}
             style={{
               content: {
-                top: "80px",
+                top: "50px",
                 left: "50%",
-                width: "70vw",
+                width: "90vw",
                 right: "auto",
-                bottom: "auto",
+                bottom:"auto",
+                padding: "20px",
                 marginRight: "-50%",
                 transform: "translate(-50%, -0%)",
               },
@@ -318,7 +361,6 @@ const GestionUsuarios = () => {
                 top: "15px",
                 right: "10px",
                 background: "transparent",
-                border: "none",
                 fontSize: "15px",
                 cursor: "pointer",
                 border: "solid red",
@@ -337,39 +379,39 @@ const GestionUsuarios = () => {
             >
               &times;
             </button>
-            <div className="container containerr mt-5">
-              <h2 className="text-center text-white-900 font-weight-bold">
+            <div className="container containerr mt-5 scroll w-100">
+              <form className="w-100">
+              <h2 className="text-center text-white font-weight-bold">
                 Editar Usuario
               </h2>
-              <form>
-                <div className="form-group text-white-900 font-weight-bold">
+                <div className="form-group text-white font-weight-bold">
                   <label htmlFor="nombre">Nombre</label>
                   <input
                     type="text"
                     id="nombre"
                     name="nombre_usuario"
-                    className="form-control"
+                    className="form-control text-black font-weight-bold"
                     value={selectedUsuario?.nombre_usuario || ""}
                     onChange={handleInputChange}
                   />
                 </div>
-                <div className="form-group text-white-900 font-weight-bold">
+                <div className="form-group text-white font-weight-bold">
                   <label htmlFor="email">Email</label>
                   <input
                     type="email"
                     id="email"
                     name="email"
-                    className="form-control"
+                    className="form-control text-black font-weight-bold"
                     value={selectedUsuario?.email || ""}
                     onChange={handleInputChange}
                   />
                 </div>
-                <div className="form-group text-white-900 font-weight-bold">
+                <div className="form-group text-white font-weight-bold">
                   <label htmlFor="rol">Rol</label>
                   <select
                     id="rol"
                     name="rol"
-                    className="form-control"
+                    className="form-control text-black font-weight-bold"
                     value={selectedUsuario?.rol || ""}
                     onChange={handleInputChange}
                   >
@@ -392,7 +434,7 @@ const GestionUsuarios = () => {
             isOpen={isModalOpen2}
             style={{
               content: {
-                top: "80px",
+                top: "60px",
                 left: "50%",
                 width: "70vw",
                 right: "auto",
@@ -409,7 +451,6 @@ const GestionUsuarios = () => {
                 top: "15px",
                 right: "10px",
                 background: "transparent",
-                border: "none",
                 fontSize: "15px",
                 cursor: "pointer",
                 border: "solid red",

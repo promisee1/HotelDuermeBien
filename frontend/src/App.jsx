@@ -6,6 +6,10 @@ import HomeRecepcionista from './Recepcionista/HomeRecepcionista';
 import Login from './login/login';
 import './App.css';
 import GestionUsuarios from './Admin/GestionUsuarios';
+import Habitaciones from './Recepcionista/Rutas/Habitaciones';
+import Huespedes from './Recepcionista/Rutas/Huespedes';
+import Reservas from './Recepcionista/Rutas/Reservas';
+import RecepcionistaProfile from './Recepcionista/RecepcionistaProfile';
 
 
 function App() {
@@ -54,10 +58,10 @@ function App() {
         />
         {/* Ruta para el Recepcionista */}
         <Route
-          path="/recepcionista"
+          path="/recepcionista/*"
           element={
             isAuthenticated && userRole === 'Recepcionista' ? (
-              <HomeRecepcionista onLogout={handleLogout} />
+              <RecepcionistaRoutes onLogout={handleLogout} />
             ) : (
               <Navigate to="/" replace />
             )
@@ -94,6 +98,18 @@ function AdminRoutes({ onLogout }) {
       <Route path="/profile" element={<AdminProfile onLogout={onLogout} />} />
     </Routes>
   );
+}
+
+function RecepcionistaRoutes({onLogout}){
+  return (
+    <Routes>
+      <Route path="/" element={<HomeRecepcionista onLogout={onLogout} />} />
+      <Route path="/habitaciones" element={<Habitaciones onLogout={onLogout} />} />
+      <Route path="/huespedes" element={<Huespedes onLogout={onLogout} />} />
+      <Route path="/reservas" element={<Reservas onLogout={onLogout} />} />
+      <Route path="/profile" element={<RecepcionistaProfile onLogout={onLogout} />} />
+    </Routes>
+  )
 }
 
 export default App;

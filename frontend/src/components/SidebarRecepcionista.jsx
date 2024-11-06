@@ -2,10 +2,8 @@ import React from "react";
 import Logo1 from "../assets/Logo1.jpeg";
 import { Link, useNavigate } from "react-router-dom";
 import "./sidebar.css";
-import useCss from "../assets/useCss";
 
 const Sidebar = ({ onLogout }) => {
-  useCss(); 
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -36,21 +34,35 @@ const Sidebar = ({ onLogout }) => {
 
       {/* Opciones del sidebar */}
       <li className="nav-item">
-        <Link className="nav-link" to="/admin">
+        <Link className="nav-link" to="/recepcionista">
           <i className="fas fa-cogs"></i>
           <span>Dashboard</span>
         </Link>
       </li>
 
       <li className="nav-item mt-1">
-        <Link className="nav-link" to="/admin/users">
+        <Link className="nav-link" to="/recepcionista/habitaciones">
           <i className="fas fa-users-cog"></i>
-          <span>Gestionar Usuarios</span>
+          <span>Gestionar Habitaciones</span>
+        </Link>
+      </li>
+
+      <li className="nav-item mt-1">
+        <Link className="nav-link" to="/recepcionista/huespedes">
+          <i className="fas fa-users-cog"></i>
+          <span>Gestionar Huespedes</span>
+        </Link>
+      </li>
+
+      <li className="nav-item mt-1">
+        <Link className="nav-link" to="/recepcionista/reservas">
+          <i className="fas fa-users-cog"></i>
+          <span>Gestionar Reservas</span>
         </Link>
       </li>
       
       <li className="nav-item">
-        <Link className="nav-link" to="/admin/profile">
+        <Link className="nav-link" to="/recepcionista/profile">
           <i className="fas fa-cogs"></i>
           <span>Mi perfil</span>
         </Link>

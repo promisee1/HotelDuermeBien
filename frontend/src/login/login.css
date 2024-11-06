@@ -1,9 +1,3 @@
-body {
-    background: url('../assets/bglogin.png') no-repeat center center;
-    background-size: cover;
-    margin: 0;
-    padding: 0;
-}
 
 .container {
     height: 100vh;

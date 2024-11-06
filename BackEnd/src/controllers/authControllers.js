@@ -1,4 +1,6 @@
 import Usuario from '../models/usuarios.js';
+import Habitacion from '../models/habitaciones.js';
+
 
 
 
@@ -142,3 +144,59 @@ export const updateUsuario = async (req, res) => {
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
+
+// Controlador de obtener todas las habitaciones
+
+export const obtenerHabitaciones = async (req, res) => {
+  try {
+    const habitaciones = await Habitacion.findAll();
+    res.status(200).json(habitaciones);
+  } catch (error) {
+    console.error('Error al obtener las habitaciones:', error);
+    res.status(500).json({ message: 'Error al obtener las habitaciones' });
+  }
+};
+
+// Controlador para registrar una habitación
+export const crearHabitacion = async (req, res) => {
+  const {numero_h , capacidad, orientacion, estado} = req.body;
+  try {
+    const habitacion = await Habitacion.create({numero_h, capacidad, orientacion, estado});
+    res.status(201).json(habitacion);
+  } catch (error) {
+    console.error('Error al registrar la habitacion:', error);
+    res.status(500).json({ message: 'Error al registrar la habitacion' });
+  }
+}
+
+export const eliminarHabitacion  = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const habitacion = await Habitacion.findByPk(id);
+    if (!habitacion) {
+      return res.status(404).json({ message: 'Habitacion no encontrada' });
+    }
+    await habitacion.destroy();
+    res.status(200).json({ message: 'Habitacion eliminada exitosamente' });
+  } catch (error) {
+    console.error('Error al eliminar la habitacion:', error); 
+    res.status(500).json({ message: 'Error al eliminar la habitacion' });
+    }
+}
+
+export const actualizarHabitacion = async (req, res) => {
+  const { id } = req.params;
+  const { numero_h, capacidad, orientacion, estado } = req.body;
+  try {
+    const habitacion = await Habitacion.findByPk(id);
+    if (!habitacion) {
+      return res.status(404).json({ message: 'Habitacion no encontrada' });
+    }
+    await habitacion.update({ numero_h, capacidad, orientacion, estado });
+    res.status(200).json({ message: 'Habitacion actualizada exitosamente' });
+  } catch (error) {
+    console.error('Error al actualizar la habitacion:', error);
+    res.status(500).json({ message: 'Error al actualizar la habitacion' });
+  }
+}
+

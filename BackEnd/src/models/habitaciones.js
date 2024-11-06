@@ -21,7 +21,7 @@ const Habitacion = sequelize.define('Habitacion', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  estado: {
+  id_estado: {
     type: DataTypes.STRING,
     allowNull: false
   }
