@@ -7,36 +7,3 @@
     transition: transform 0.3s ease;
   }
   
-  /* Sidebar oculto en pantallas pequeñas */
-  .sidebar.closed {
-    transform: translateX(-250px); /* Mover fuera de la pantalla */
-  }
-  
-  /* Sidebar visible */
-  .sidebar.open {
-    transform: translateX(0); /* Sidebar visible */
-  }
-  
-  /* Botón de hamburguesa (menú) solo visible en pantallas pequeñas */
-  .sidebar-toggle {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1050;
-    background-color: transparent;
-    border: none;
-    color: #fff;
-  }
-  
-  /* Asegurarse de que el botón no se vea en pantallas medianas o grandes */
-  @media (min-width: 768px) {
-    .sidebar-toggle {
-      display: none;
-    }
-  
-    /* En pantallas medianas y grandes, el sidebar siempre está visible */
-    .sidebar {
-      transform: translateX(0); /* Sidebar siempre visible */
-    }
-  }
-  

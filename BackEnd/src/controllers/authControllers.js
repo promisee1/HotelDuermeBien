@@ -1,5 +1,6 @@
 import Usuario from '../models/usuarios.js';
 import Habitacion from '../models/habitaciones.js';
+import Huespedes from '../models/huespedes.js';
 
 
 
@@ -149,19 +150,21 @@ export const updateUsuario = async (req, res) => {
 
 export const obtenerHabitaciones = async (req, res) => {
   try {
+    console.log("Iniciando consulta de habitaciones...");
     const habitaciones = await Habitacion.findAll();
     res.status(200).json(habitaciones);
   } catch (error) {
     console.error('Error al obtener las habitaciones:', error);
-    res.status(500).json({ message: 'Error al obtener las habitaciones' });
+    res.status(500).json({ message: 'Error al obtener las habitaciones', error: error.message });
   }
 };
 
+
 // Controlador para registrar una habitación
 export const crearHabitacion = async (req, res) => {
-  const {numero_h , capacidad, orientacion, estado} = req.body;
+  const {numero_habitacion , capacidad, orientacion, estado_id} = req.body;
   try {
-    const habitacion = await Habitacion.create({numero_h, capacidad, orientacion, estado});
+    const habitacion = await Habitacion.create({numero_habitacion, capacidad, orientacion, estado_id});
     res.status(201).json(habitacion);
   } catch (error) {
     console.error('Error al registrar la habitacion:', error);
@@ -186,13 +189,13 @@ export const eliminarHabitacion  = async (req, res) => {
 
 export const actualizarHabitacion = async (req, res) => {
   const { id } = req.params;
-  const { numero_h, capacidad, orientacion, estado } = req.body;
+  const { numero_habitacion, capacidad, orientacion, estado_id } = req.body;
   try {
     const habitacion = await Habitacion.findByPk(id);
     if (!habitacion) {
       return res.status(404).json({ message: 'Habitacion no encontrada' });
     }
-    await habitacion.update({ numero_h, capacidad, orientacion, estado });
+    await habitacion.update({ numero_habitacion, capacidad, orientacion, estado_id });
     res.status(200).json({ message: 'Habitacion actualizada exitosamente' });
   } catch (error) {
     console.error('Error al actualizar la habitacion:', error);
@@ -200,3 +203,84 @@ export const actualizarHabitacion = async (req, res) => {
   }
 }
 
+// Obtener todos los huéspedes
+export const obtenerHuespedes = async (req, res) => {
+  try {
+      const huespedes = await Huespedes.findAll();
+      res.status(200).json(huespedes);
+  } catch (error) {
+      console.error("Error al obtener los huéspedes:", error);
+      res.status(500).json({ error: "Error al obtener los huéspedes" });
+  }
+};
+
+// Obtener un huésped por ID
+export const getHuespedById = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const huesped = await Huespedes.findByPk(id);
+
+      if (huesped) {
+          res.status(200).json(huesped);
+      } else {
+          res.status(404).json({ error: "Huésped no encontrado" });
+      }
+  } catch (error) {
+      console.error("Error al obtener el huésped:", error);
+      res.status(500).json({ error: "Error al obtener el huésped" });
+  }
+};
+
+// Crear un nuevo huésped
+export const crearHuesped = async (req, res) => {
+  try {
+      const { nombre, RUT, numero_contacto, correo_electronico, es_responsable } = req.body;
+      const nuevoHuesped = await Huespedes.create({ nombre, RUT, numero_contacto, correo_electronico, es_responsable });
+      res.status(201).json(nuevoHuesped);
+  } catch (error) {
+      console.error("Error al crear el huésped:", error);
+      res.status(500).json({ error: "Error al crear el huésped" });
+  }
+};
+
+// Actualizar un huésped por ID
+export const actualizarHuesped = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const { nombre, RUT, numero_contacto, correo_electronico, es_responsable } = req.body;
+
+      const huesped = await Huespedes.findByPk(id);
+      if (huesped) {
+          huesped.nombre = nombre;
+          huesped.RUT = RUT;
+          huesped.numero_contacto = numero_contacto;
+          huesped.correo_electronico = correo_electronico;
+          huesped.es_responsable = es_responsable;
+          await huesped.save();
+          res.status(200).json(huesped);
+      } else {
+          res.status(404).json({ error: "Huésped no encontrado" });
+      }
+  } catch (error) {
+      console.error("Error al actualizar el huésped:", error);
+      res.status(500).json({ error: "Error al actualizar el huésped" });
+  }
+};
+
+// Eliminar un huésped por ID
+export const eliminarHuesped = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const huesped = await Huespedes.findByPk(id);
+
+      if (huesped) {
+          await huesped.destroy();
+          res.status(200).json({ message: "Huésped eliminado con éxito" });
+      } else {
+          res.status(404).json({ error: "Huésped no encontrado" });
+      }
+  } catch (error) {
+      console.error("Error al eliminar el huésped:", error);
+      res.status(500).json({ error: "Error al eliminar el huésped" });
+  }
+};

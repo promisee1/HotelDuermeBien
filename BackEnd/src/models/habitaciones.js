@@ -10,7 +10,7 @@ const Habitacion = sequelize.define('Habitacion', {
     autoIncrement: true
   },
   numero_habitacion: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false
   },
   capacidad: {
@@ -21,7 +21,7 @@ const Habitacion = sequelize.define('Habitacion', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  id_estado: {
+  estado_id: {
     type: DataTypes.STRING,
     allowNull: false
   }

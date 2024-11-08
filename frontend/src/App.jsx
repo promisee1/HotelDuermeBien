@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import HomeAdmin from './Admin/HomeAdmin';
-import AdminProfile from './Admin/AdminProfile';
 import HomeRecepcionista from './Recepcionista/HomeRecepcionista';
 import Login from './login/login';
 import './App.css';
@@ -9,7 +8,6 @@ import GestionUsuarios from './Admin/GestionUsuarios';
 import Habitaciones from './Recepcionista/Rutas/Habitaciones';
 import Huespedes from './Recepcionista/Rutas/Huespedes';
 import Reservas from './Recepcionista/Rutas/Reservas';
-import RecepcionistaProfile from './Recepcionista/RecepcionistaProfile';
 
 
 function App() {
@@ -95,7 +93,7 @@ function AdminRoutes({ onLogout }) {
     <Routes>
       <Route path="/" element={<HomeAdmin onLogout={onLogout} />} />
       <Route path="/users" element={<GestionUsuarios onLogout={onLogout} />} />
-      <Route path="/profile" element={<AdminProfile onLogout={onLogout} />} />
+
     </Routes>
   );
 }
@@ -107,7 +105,6 @@ function RecepcionistaRoutes({onLogout}){
       <Route path="/habitaciones" element={<Habitaciones onLogout={onLogout} />} />
       <Route path="/huespedes" element={<Huespedes onLogout={onLogout} />} />
       <Route path="/reservas" element={<Reservas onLogout={onLogout} />} />
-      <Route path="/profile" element={<RecepcionistaProfile onLogout={onLogout} />} />
     </Routes>
   )
 }

@@ -31,7 +31,7 @@ const TopBarDropdown = ({ onLogout }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light topbar mb-4 static-top shadow">
+    <nav className="navbar navbar-expand-lg navbar-light topbar mb-4 static-top shadow z-index-1">
       <ul className="navbar-nav ml-auto">
         <div className="topbar-divider d-none d-sm-block"></div>
 

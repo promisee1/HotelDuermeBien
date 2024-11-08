@@ -48,13 +48,7 @@ const Sidebar = ({ onLogout }) => {
           <span>Gestionar Usuarios</span>
         </Link>
       </li>
-      
-      <li className="nav-item">
-        <Link className="nav-link" to="/admin/profile">
-          <i className="fas fa-cogs"></i>
-          <span>Mi perfil</span>
-        </Link>
-      </li>
+    
 
       <li className="nav-item">
         <Link className="nav-link" onClick={() => handleLogout()}>

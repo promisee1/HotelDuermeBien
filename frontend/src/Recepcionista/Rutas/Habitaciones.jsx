@@ -2,22 +2,21 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../../components/SidebarRecepcionista';
 import TopBar from '../../components/TopBar';
-import { Button, Container } from 'react-bootstrap';
-import Modal from 'react-modal';
+import { Button, Container, Card, Row, Col, Modal } from 'react-bootstrap';
 import axios from 'axios';
-import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from "react-toastify";
-
-Modal.setAppElement("#root");
+import 'react-toastify/dist/ReactToastify.css';
 
 const Habitaciones = ({ onLogout }) => {
     const [habitaciones, setHabitaciones] = useState([]);
+    const [idHabitacion, setIdHabitacion] = useState('');
     const [modalIsOpen, setIsOpen] = useState(false);
-    const [numero_h, setNumero_h] = useState('');
+    const [modalEditarHabitacionIsOpen, setModalEditarHabitacionIsOpen] = useState(false);
+    const [numero_habitacion, setNumero_habitacion] = useState('');
     const [capacidad, setCapacidad] = useState('');
-    const [estado, setEstado] = useState('');
-    const [pending, setPending] = useState(true);
+    const [estado_id, setEstado_id] = useState('');
+    const [orientacion, setOrientacion] = useState('');
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -25,20 +24,57 @@ const Habitaciones = ({ onLogout }) => {
         navigate('/login');
     };
 
-    // Abrir y cerrar modal
+    // Abrir y cerrar modal para agregar habitación
     const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
+    const closeModal = () => {
+        setIsOpen(false);
+        // Limpiar campos al cerrar el modal
+        setNumero_habitacion('');
+        setCapacidad('');
+        setOrientacion('');
+        setEstado_id('');
+    };
+
+    // Abrir y cerrar modal para editar habitación
+    const openModalEditarHabitacion = (habitacion) => {
+        setIdHabitacion(habitacion.id_habitacion);
+        setNumero_habitacion(habitacion.numero_habitacion);
+        setCapacidad(habitacion.capacidad);
+        setOrientacion(habitacion.orientacion);
+        setEstado_id(habitacion.estado_id);
+        setModalEditarHabitacionIsOpen(true);
+    };
+
+    const closeModalEditarHabitacion = () => {
+        setModalEditarHabitacionIsOpen(false);
+        setIdHabitacion('');
+        setNumero_habitacion('');
+        setCapacidad('');
+        setOrientacion('');
+        setEstado_id('');
+    };
+
+    // Traducción del estado_id
+    const getEstadoTexto = (estadoId) => {
+        switch (estadoId) {
+            case 1:
+                return "Disponible";
+            case 2:
+                return "Ocupada";
+            case 3:
+                return "En mantenimiento";
+            default:
+                return "Desconocido";
+        }
+    };
 
     // Fetch habitaciones
     const fetchHabitaciones = async () => {
         try {
-            setPending(true);
             const response = await axios.get("http://localhost:5000/api/auth/habitaciones");
             setHabitaciones(response.data);
         } catch (error) {
-            console.error("Error al obtener las habitaciones:", error);
-        } finally {
-            setPending(false);
+            console.error("Error al obtener las habitaciones:", error.response ? error.response.data : error.message);
         }
     };
 
@@ -50,121 +86,211 @@ const Habitaciones = ({ onLogout }) => {
     const crearHabitacion = async () => {
         try {
             const newHabitacion = {
-                numero: numero_h,
-                capacidad: parseInt(capacidad),  // Asegúrate de que la capacidad sea un número
-                estado,
+                numero_habitacion,
+                capacidad: parseInt(capacidad),
+                orientacion,
+                estado_id: parseInt(estado_id)
             };
-            const response = await axios.post("http://localhost:5000/api/auth/habitaciones", newHabitacion,
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+            const response = await axios.post("http://localhost:5000/api/auth/habitaciones", newHabitacion, {
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            );
+            });
 
-            console.log(response.data);
             setHabitaciones([...habitaciones, response.data]);
             toast.success("Habitación creada");
             closeModal();
         } catch (error) {
             console.error("Error al crear la habitación:", error);
-            toast.error("Error al crear la habitación"); // Opcional para mostrar mensaje de error
+            toast.error("Error al crear la habitación");
         }
     };
-    
 
-    // Función para eliminar habitación
-    const eliminarHabitacion = async (id) => {
+    // Editar habitación
+    const guardarCambiosHabitacion = async () => {
         try {
-            await axios.delete(`http://localhost:5000/api/auth/habitaciones/${id}`);
-            setHabitaciones(habitaciones.filter(hab => hab.id !== id));
+            const habitacionEditada = {
+                numero_habitacion: numero_habitacion,
+                capacidad: parseInt(capacidad),
+                orientacion,
+                estado_id: parseInt(estado_id)
+            };
+            await axios.put(`http://localhost:5000/api/auth/habitaciones/${idHabitacion}`, habitacionEditada, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            setHabitaciones(habitaciones.map(hab => 
+                hab.id_habitacion === idHabitacion ? { ...hab, ...habitacionEditada } : hab
+            ));
+            toast.success("Habitación actualizada correctamente");
+            closeModalEditarHabitacion();
+        } catch (error) {
+            console.error("Error al actualizar la habitación:", error);
+            toast.error("Error al actualizar la habitación");
+        }
+    };
+
+    // Eliminar habitación
+    const eliminarHabitacion = async (id_habitacion) => {
+        try {
+            await axios.delete(`http://localhost:5000/api/auth/habitaciones/${id_habitacion}`);
+            setHabitaciones(habitaciones.filter(hab => hab.id_habitacion !== id_habitacion));
+            toast.success("Habitación eliminada");
         } catch (error) {
             console.error("Error al eliminar la habitación:", error);
+            toast.error("Error al eliminar la habitación");
         }
-    };
-
-    // Columnas para la DataTable
-    const columns = [
-        { name: 'Número de Habitación', selector: row => row.numero, sortable: true },
-        { name: 'Capacidad', selector: row => row.capacidad, sortable: true },
-        { name: 'Estado', selector: row => row.estado, sortable: true },
-        {
-            name: 'Acciones',
-            cell: row => (
-                <>
-                    <Button variant="warning" onClick={() => editHabitacion(row)}>Editar</Button>{' '}
-                    <Button variant="danger" onClick={() => eliminarHabitacion(row.id)}>Eliminar</Button>
-                </>
-            ),
-        },
-    ];
-
-    const editHabitacion = (habitacion) => {
-        setNumero_h(habitacion.numero);
-        setCapacidad(habitacion.capacidad);
-        setEstado(habitacion.estado);
-        setIsOpen(true);
     };
 
     return (
-        <div className="d-flex">
+        <div className="d-flex" style={{ minHeight: "100vh" }}>
             <Sidebar onLogout={handleLogout} />
-            <div className="flex-grow-1">
+
+            <div className="flex-grow-1 d-flex flex-column" style={{ marginLeft: "210px" }}>
                 <TopBar onLogout={handleLogout} />
-                <Container className="mt-4">
-                    {/* Titulo */}
-                    <h2 className="text-center mb-4">Estado de las Habitaciones</h2>
 
-                    {/* Botón para anadir habitaciones */}
-                    <Button variant="success" onClick={openModal}>Agregar Habitación</Button>
+                <div className="d-flex justify-content-between align-items-center mb-4 me-3 ms-3 py-3">
+                    <h2 className="text-center flex-grow-1 font-weight-bold">Estado de las Habitaciones</h2>
+                    <Button variant="success w-25" onClick={openModal}>Agregar Habitación</Button>
+                </div>
+                <Container className="mt-4 mb-5">
+                    <Row className="justify-content-center mt-5 z-2">
+                        {habitaciones.map(habitacion => (
+                            <Col key={habitacion.id_habitacion} sm={6} md={4} lg={3} className="mb-4">
+                                <Card className="shadow-sm h-100">
+                                    <Card.Body>
+                                        <Card.Title className="text-center">Habitación {habitacion.numero_habitacion}</Card.Title>
+                                        <Card.Subtitle className="mb-2 text-muted text-center">
+                                            Capacidad: {habitacion.capacidad}
+                                        </Card.Subtitle>
+                                        <Card.Text className="text-center">
+                                            Orientación: {habitacion.orientacion} <br />
+                                            Estado: {getEstadoTexto(habitacion.estado_id)}
+                                        </Card.Text>
+                                        <div className="d-flex justify-content-around mt-3">
+                                            <Button variant="warning" onClick={() => openModalEditarHabitacion(habitacion)}>Editar</Button>
+                                            <Button variant="danger" onClick={() => eliminarHabitacion(habitacion.id_habitacion)}>Eliminar</Button>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
 
-                    {/* DataTable para habitaciones */}
-                    <DataTable
-                        columns={columns}
-                        data={habitaciones}
-                        progressPending={pending}
-                        pagination
-                        responsive
-                    />
-
-                    {/* Modal para añadir o editar habitaciones */}
-                    <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-                        <h2>Añadir / Editar Habitación</h2>
-                        <form>
-                            <div className="form-group">
-                                <label>Número de Habitación</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={numero_h}
-                                    onChange={e => setNumero_h(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Capacidad</label>
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    value={capacidad}
-                                    onChange={e => setCapacidad(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Estado</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={estado}
-                                    onChange={e => setEstado(e.target.value)}
-                                />
-                            </div>
+                    {/* Modal para añadir habitación */}
+                    <Modal show={modalIsOpen} onHide={closeModal} centered>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Añadir Habitación</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <form>
+                                <div className="form-group mb-3">
+                                    <label>Número de Habitación</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={numero_habitacion}
+                                        onChange={e => setNumero_habitacion(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Capacidad</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={capacidad}
+                                        onChange={e => setCapacidad(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Orientación</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={orientacion}
+                                        onChange={e => setOrientacion(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Estado</label>
+                                    <select
+                                        className="form-control"
+                                        value={estado_id}
+                                        onChange={e => setEstado_id(e.target.value)}
+                                    >
+                                        <option value="default">Seleccionar...</option>
+                                        <option value="1">Disponible</option>
+                                        <option value="2">Ocupada</option>
+                                        <option value="3">En mantenimiento</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </Modal.Body>
+                        <Modal.Footer>
                             <Button variant="primary" onClick={crearHabitacion}>Guardar</Button>
                             <Button variant="secondary" onClick={closeModal}>Cancelar</Button>
-                        </form>
+                        </Modal.Footer>
+                    </Modal>
+
+                    {/* Modal para editar habitación */}
+                    <Modal show={modalEditarHabitacionIsOpen} onHide={closeModalEditarHabitacion} centered>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Editar Habitación</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <form>
+                                <div className="form-group mb-3">
+                                    <label>Número de Habitación</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={numero_habitacion}
+                                        onChange={e => setNumero_habitacion(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Capacidad</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={capacidad}
+                                        onChange={e => setCapacidad(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Orientación</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={orientacion}
+                                        onChange={e => setOrientacion(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>Estado</label>
+                                    <select
+                                        className="form-control"
+                                        value={estado_id}
+                                        onChange={e => setEstado_id(e.target.value)}
+                                    >
+                                        <option value="default">Seleccionar...</option>
+                                        <option value="1">Disponible</option>
+                                        <option value="2">Ocupada</option>
+                                        <option value="3">En mantenimiento</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={guardarCambiosHabitacion}>Guardar Cambios</Button>
+                            <Button variant="secondary" onClick={closeModalEditarHabitacion}>Cancelar</Button>
+                        </Modal.Footer>
                     </Modal>
                 </Container>
             </div>
-            <ToastContainer/>
+            <ToastContainer />
         </div>
     );
 }

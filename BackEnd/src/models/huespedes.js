@@ -3,7 +3,7 @@ import sequelize from '../config/db.js';
 
 
 //Objeto de la entidad huespedes
-const Huesped = sequelize.define('Huesped', {
+const Huespedes = sequelize.define('Huesped', {
   id_huesped: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -17,9 +17,22 @@ const Huesped = sequelize.define('Huesped', {
     type: DataTypes.STRING,
     allowNull: false
   }
+  ,
+  numero_contacto: {
+    type: DataTypes.STRING,
+    allowNull: false
+    },
+    correo_electronico: {
+      type: DataTypes.STRING,
+      allowNull: false
+      },
+      es_responsable: {
+        type: DataTypes.TINYINT,
+        allowNull: false
+        }
 }, {
   tableName: 'huespedes',
   timestamps: false
 });
 
-export default Huesped;
+export default Huespedes;

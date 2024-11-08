@@ -1,7 +1,7 @@
 import React from "react";
 import Logo1 from "../assets/Logo1.jpeg";
 import { Link, useNavigate } from "react-router-dom";
-import "./sidebar.css";
+import "./Sidebar.css";
 
 const Sidebar = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Sidebar = ({ onLogout }) => {
 
   return (
     <ul
-      className="navbar-nav App sidebar sidebar-dark accordion px-1"
+      className="navbar-nav App sidebar sidebar-dark accordion px-1 position-fixed z-2"
       id="accordionSidebar"
     >
 
@@ -58,13 +58,6 @@ const Sidebar = ({ onLogout }) => {
         <Link className="nav-link" to="/recepcionista/reservas">
           <i className="fas fa-users-cog"></i>
           <span>Gestionar Reservas</span>
-        </Link>
-      </li>
-      
-      <li className="nav-item">
-        <Link className="nav-link" to="/recepcionista/profile">
-          <i className="fas fa-cogs"></i>
-          <span>Mi perfil</span>
         </Link>
       </li>
 

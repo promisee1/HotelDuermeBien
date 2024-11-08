@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/db.js';  // Asegúrate de usar `.js` en las rutas de ES Modules
+import sequelize from '../config/db.js';  // AsegÃºrate de usar `.js` en las rutas de ES Modules
 
 
 //Objeto de la entidad Usuario

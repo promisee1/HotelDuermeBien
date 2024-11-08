@@ -10,6 +10,9 @@ import {register, eliminarUsuario, updateUsuario, getAllUsuarios } from '../cont
 //Importes de habitaciones
 import { crearHabitacion, obtenerHabitaciones, eliminarHabitacion, actualizarHabitacion } from '../controllers/authControllers.js';
 
+//Importes de huespedes
+import { crearHuesped, obtenerHuespedes, eliminarHuesped, actualizarHuesped } from '../controllers/authControllers.js';
+
 const router = Router();
 
 // Ruta de registro de usuarios (pública)
@@ -38,6 +41,18 @@ router.delete('/habitaciones/:id',  eliminarHabitacion);
 
 // Ruta protegida para actualizar una habitación
 router.put('/habitaciones/:id', actualizarHabitacion);
+
+// Ruta protegida para añadir un huesped
+router.post('/huespedes', crearHuesped);
+
+// Ruta protegida para obtener todos los huespedes
+router.get('/huespedes', obtenerHuespedes);
+
+// Ruta protegida para eliminar un huesped
+router.delete('/huespedes/:id',  eliminarHuesped);
+
+// Ruta protegida para actualizar un huesped
+router.put('/huespedes/:id', actualizarHuesped);
 
 // Ruta protegida para obtener el perfil del usuario autenticado
 router.get('/perfil', (req, res) => {

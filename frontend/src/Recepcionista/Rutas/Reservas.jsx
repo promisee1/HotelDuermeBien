@@ -17,7 +17,7 @@ const Reservas = () => {
             <Sidebar />
 
             {/* Contenedor principal */}
-            <div className="flex-grow-1">
+            <div className="flex-grow-1" style={{ marginLeft: "210px" }}>
                 {/* TopBar */}
                 <TopBar />
 

@@ -1,17 +1,24 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 
-const estadohabitacion = sequelize.define('estadohabitacion', {
+const EstadoHabitacion = sequelize.define('EstadoHabitacion', {
     id_estado: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    estado: {
+    nombre_estado: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
+    },
+    descripcion: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
-}, {
-    tableName: 'estadohabitaciones',
+    }, {
+    tableName: 'estados_habitacion',
     timestamps: false
-});
+    });
+
+    export default EstadoHabitacion;

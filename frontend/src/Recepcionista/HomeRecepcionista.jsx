@@ -26,7 +26,7 @@ const HomeRecepcionista = ({ onLogout }) => {
                 <TopBar onLogout={handleLogout} />
 
                 {/* Contenido central */}
-                <Container fluid className="mt-4">
+                <Container fluid className="mt-4" style={{ marginLeft: "210px" }}>
                     <h2 className="text-center mb-4">Dashboard de Recepcionista</h2>
 
                     <Row>
