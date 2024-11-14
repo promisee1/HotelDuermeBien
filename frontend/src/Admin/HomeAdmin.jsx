@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar.jsx";
-import TopBar from "../components/TopBar.jsx";
-import { Line, Doughnut } from "react-chartjs-2"; // Importar los componentes de gráficos
-import { lineData, doughnutData, lineOptions, doughnutOptions } from "../assets/chartConfig.js"; // Importar la configuración de gráficos
+import TopBarDropdown from "../components/TopBar.jsx";
+import { Line, Doughnut } from "react-chartjs-2";
+import { lineData, doughnutData, lineOptions, doughnutOptions } from "../assets/chartConfig.js";
 import useBackground from "../assets/useBackground.jsx";
 import { useNavigate } from "react-router-dom";
 import useCss from "../assets/useCss.jsx";
@@ -11,20 +11,43 @@ const HomeAdmin = ({ onLogout }) => {
   useCss();
   useBackground("/src/assets/homeAdmin.webp");
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(window.innerWidth > 992);
 
   const handleLogout = () => {
-    onLogout();
-    navigate("/login");
+    localStorage.removeItem('nombre_usuario'); // Elimina el nombre de usuario del localStorage
+    onLogout(); // Llama a la función de cierre de sesión
+    navigate("/login"); // Navega a la página de inicio de sesión
   };
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 992) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <div className="d-flex flex-column flex-lg-row">
+    <div className="d-flex">
       {/* Sidebar */}
-      <Sidebar onLogout={handleLogout} className="sidebar d-none d-lg-block" />
+      <Sidebar isOpen={isOpen} onLogout={handleLogout} toggleSidebar={toggleSidebar} />
 
       {/* Contenido principal */}
-      <div className="flex-grow-1">
-        <TopBar onLogout={handleLogout} />
+      <div className={`main-content flex-grow-1 ${isOpen ? 'content-shift' : ''}`}>
+        <TopBarDropdown onLogout={handleLogout} toggleSidebar={toggleSidebar} />
 
         <div className="container-fluid mt-4">
           <div className="d-sm-flex align-items-center mb-4">

@@ -1,9 +1,97 @@
-.App{
-    background-color: #231f20;
-}
-/* Estilos predeterminados para el sidebar */
+/* Estilos para el sidebar */
 .sidebar {
-    width: 250px;
-    transition: transform 0.3s ease;
+  width: 250px; 
+  background-color: #2c2a2b; /* Color de fondo */
+  height: 100vh;
+  color: white;
+  z-index: 1040;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fondo oscuro detrás del sidebar en pantallas pequeñas */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1035;
+}
+
+/* Contenedor principal */
+.main-content {
+  margin-left: 220px; /* Desplaza el contenido principal hacia la derecha */
+  width: calc(100% - 250px); /* Ajusta el ancho del contenido */
+  transition: margin-left 0.3s ease;
+  padding: 0;
+}
+
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 0; /* Quita el margen en pantallas pequeñas */
+    width: 100%; /* Asegura que el contenido ocupe todo el ancho */
   }
-  
+}
+
+/* Ajustes para el logo en el sidebar */
+.sidebar-brand-icon img {
+  max-width: 80px; /* Controla el ancho máximo */
+  max-height: 80px; /* Controla la altura máxima */
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Mantiene la proporción */
+}
+
+/* Estilo para mantener el tamaño del icono y texto en el sidebar */
+.sidebar .nav-link i {
+  font-size: 1.3rem; /* Tamaño constante para los iconos */
+}
+
+.sidebar .nav-link span {
+  font-size: 1rem; /* Tamaño constante para el texto */
+}
+
+.sidebar .sidebar-brand-text {
+  font-size: 1.2rem; /* Tamaño constante para el texto de la marca */
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Opcional: controla el espaciado entre elementos del menú */
+.nav-item {
+  margin-bottom: 1rem; /* Espacio entre los elementos del menú */
+}
+
+/* Ajustes específicos para pantallas pequeñas */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 250px; /* Mantiene el ancho del sidebar en móviles */
+  }
+
+  /* Mantiene el tamaño del logo en pantallas pequeñas */
+  .sidebar-brand-icon img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+
+  /* Mantiene el tamaño del icono en móviles */
+  .sidebar .nav-link i {
+    font-size: 1.3rem;
+  }
+
+  /* Mantiene el tamaño del texto en móviles */
+  .sidebar .nav-link span {
+    font-size: 1rem;
+  }
+
+  /* Mantiene el tamaño del texto de la marca en móviles */
+  .sidebar .sidebar-brand-text {
+    font-size: 1.2rem;
+  }
+}

@@ -29,6 +29,26 @@ const GestionUsuarios = () => {
   const [contrasena, setContrasena] = useState("");
   const [rol, setRol] = useState("Recepcionista");
 
+  const [isOpen, setIsOpen] = useState(window.innerWidth > 992);
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 992) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   // Eliminar usuario
   const eliminarUsuario = async (id) => {
     try {
@@ -295,22 +315,21 @@ const GestionUsuarios = () => {
   };
   return (
     <div className="d-flex">
-      <Sidebar onLogout={handleLogout} />
-
-      <div className=" flex-grow-1 me-1">
-        <TopBar onLogout={handleLogout} />
-
+      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+  
+      <div className={`flex-grow-1 ${isOpen ? 'content-shift' : ''}`}>
+        <TopBar onLogout={handleLogout} toggleSidebar={toggleSidebar} />
+  
         <div className="container containerr mx-auto ">
           <br />
           <div className="card">
             <div className="card-body text-end mb-4">
-              <div className=" mb-4">
+              <div className="mb-4">
                 <h2 className="font-weight-bold text-center">Lista de Usuarios</h2>
-               
               </div>
-                <div className="d-flex justify-content-center mb-2"  >
-                  <SubHeaderComponent />
-               <button
+              <div className="d-flex justify-content-center mb-2">
+                <SubHeaderComponent />
+                <button
                   className="btn btn-primary w-50 mb-2"
                   onClick={handleAdd}
                 >
@@ -328,12 +347,11 @@ const GestionUsuarios = () => {
                 striped // Pone las filas de la tabla de color
                 highlightOnHover // Pone el cursor sobre las filas
                 pointerOnHover // Pone el cursor sobre las filas
-
+  
                 noDataComponent={
                   <div className="p-4 text-center">
                     No se encontraron usuarios que coincidan con la búsqueda.
                   </div>
-
                 }
               />
             </div>
@@ -347,7 +365,7 @@ const GestionUsuarios = () => {
                 left: "50%",
                 width: "90vw",
                 right: "auto",
-                bottom:"auto",
+                bottom: "auto",
                 padding: "20px",
                 marginRight: "-50%",
                 transform: "translate(-50%, -0%)",
@@ -370,20 +388,15 @@ const GestionUsuarios = () => {
                 padding: "5px 10px",
                 fontWeight: "bold",
                 marginTop: "-5px",
-
-                "&:hover": {
-                  backgroundColor: "red",
-                  color: "white",
-                },
               }}
             >
               &times;
             </button>
             <div className="container containerr mt-5 scroll w-100">
               <form className="w-100">
-              <h2 className="text-center text-white font-weight-bold">
-                Editar Usuario
-              </h2>
+                <h2 className="text-center text-white font-weight-bold">
+                  Editar Usuario
+                </h2>
                 <div className="form-group text-white font-weight-bold">
                   <label htmlFor="nombre">Nombre</label>
                   <input
@@ -429,7 +442,7 @@ const GestionUsuarios = () => {
               </form>
             </div>
           </Modal>
-
+  
           <Modal
             isOpen={isModalOpen2}
             style={{
@@ -460,16 +473,11 @@ const GestionUsuarios = () => {
                 padding: "5px 10px",
                 fontWeight: "bold",
                 marginTop: "-5px",
-
-                "&:hover": {
-                  backgroundColor: "red",
-                  color: "white",
-                },
               }}
             >
               &times;
             </button>
-
+  
             <div className="container mt-5 containerr">
               <div className="form-wrapper">
                 <h2 className="text-center text-white-900 font-weight-bold">
@@ -504,7 +512,7 @@ const GestionUsuarios = () => {
                     <input
                       type="text"
                       value={contrasena}
-                      className="form-control text-white-900 font-weight-bold "
+                      className="form-control text-white-900 font-weight-bold"
                     />
                   </div>
                   <div className="mb-3 text-white-900 font-weight-bold form-group">
@@ -532,7 +540,7 @@ const GestionUsuarios = () => {
       </div>
       <ToastContainer />
     </div>
-  );
-};
+  )}
+
 
 export default GestionUsuarios;
