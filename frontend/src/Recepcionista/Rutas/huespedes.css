@@ -1,0 +1,117 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Título principal */
+h1 {
+    color: #007bff;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+/* Botón principal */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Campo de búsqueda */
+.input-group {
+    width: 50%;
+    margin: 20px auto;
+}
+
+.input-group .form-control {
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* DataTable */
+.data-table {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.data-table .rdt_TableHead {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+.data-table .rdt_TableRow {
+    min-height: 50px;
+}
+
+.data-table .rdt_TableCell {
+    text-align: center;
+    padding: 10px;
+}
+
+.data-table .rdt_Pagination {
+    justify-content: center;
+}
+
+/* Botones de acción */
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Modal */
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-body {
+    padding: 20px 30px;
+    font-size: 14px;
+}
+
+.modal-footer .btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+}

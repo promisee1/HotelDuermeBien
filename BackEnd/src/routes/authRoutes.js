@@ -12,6 +12,12 @@ import { crearHabitacion, obtenerHabitaciones, eliminarHabitacion, actualizarHab
 
 //Importes de huespedes
 import { crearHuesped, obtenerHuespedes, eliminarHuesped, actualizarHuesped } from '../controllers/authControllers.js';
+import {
+  crearReserva,
+  obtenerReservas,
+  actualizarReserva,
+  eliminarReserva,
+} from "../controllers/reservasController.js";
 
 const router = Router();
 
@@ -53,10 +59,25 @@ router.delete('/huespedes/:id',  eliminarHuesped);
 
 // Ruta protegida para actualizar un huesped
 router.put('/huespedes/:id', actualizarHuesped);
+router.post("/reservas", crearReserva); // Crear una nueva reserva
+router.get("/reservas", obtenerReservas); // Obtener todas las reservas
+router.put("/reservas/:id", actualizarReserva); // Actualizar una reserva
+router.delete("/reservas/:id", eliminarReserva); // Eliminar una reserva
+
 
 // Ruta protegida para obtener el perfil del usuario autenticado
 router.get('/perfil', (req, res) => {
   res.json({ message: `Bienvenido usuario con ID: ${req.user.id}` });
 });
+
+
+router.post("/reservas", (req, res) => {
+  console.log("Solicitud POST recibida en /api/auth/reservas");
+  res.status(200).send("Ruta funcionando correctamente");
+});
+
+
+// Rutas para las reservas
+
 
 export default router;

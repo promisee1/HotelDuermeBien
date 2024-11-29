@@ -1,7 +1,9 @@
 import Usuario from '../models/usuarios.js';
 import Habitacion from '../models/habitaciones.js';
 import Huespedes from '../models/huespedes.js';
-
+import Reserva from "../models/reservas.js";
+import Huespedes from "../models/huespedes.js";
+import Habitacion from "../models/habitaciones.js";
 
 
 
@@ -284,3 +286,7 @@ export const eliminarHuesped = async (req, res) => {
       res.status(500).json({ error: "Error al eliminar el huésped" });
   }
 };
+
+
+//aaa
+

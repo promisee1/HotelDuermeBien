@@ -1,5 +1,8 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
+import Reserva from "./reservas.js";
+
+Habitacion.hasMany(Reserva, { foreignKey: "habitacionId" });
 
 
 //Objeto de la entidad habitaciones

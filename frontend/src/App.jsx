@@ -104,7 +104,7 @@ function RecepcionistaRoutes({onLogout}){
       <Route path="/" element={<HomeRecepcionista onLogout={onLogout} />} />
       <Route path="/habitaciones" element={<Habitaciones onLogout={onLogout} />} />
       <Route path="/huespedes" element={<Huespedes onLogout={onLogout} />} />
-      <Route path="/reservas" element={<Reservas onLogout={onLogout} />} />
+      <Route path="/reservas" element={<Reservas onLogout={onLogout} />} /> {/* Esta es la ruta correcta */}
     </Routes>
   )
 }

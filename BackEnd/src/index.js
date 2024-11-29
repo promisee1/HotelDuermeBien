@@ -12,8 +12,8 @@ const PORT = 5000;
 
 // Configuración de CORS para permitir solicitudes desde tu frontend
 app.use(cors({
-  origin: 'http://localhost:5173',  // Permitir solicitudes solo desde el frontend
-  credentials: false,  // Permitir envío de credenciales (como cookies o sesiones)
+  origin: 'http://localhost:5173', // Cambia esto según tu URL del frontend
+  credentials: true, // Si estás usando cookies o credenciales
 }));
 
 // App usará el bodyparser para transformar los datos en archivos entendibles para el ORM
