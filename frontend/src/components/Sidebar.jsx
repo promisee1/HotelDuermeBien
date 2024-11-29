@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo1 from "../assets/Logo1.jpeg";
 import { Link } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
 import "./sidebar.css";
 import useCss from "../assets/useCss";
 
 const Sidebar = ({ onLogout, isOpen, toggleSidebar }) => {
   useCss();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  // Abrir modal
+  const handleShowModal = () => {
+    setShowLogoutModal(true);
+  };
+
+  // Cerrar modal
+  const handleCloseModal = () => {
+    setShowLogoutModal(false);
+  };
+
+  // Confirmar cierre de sesión
+  const handleLogout = () => {
+    onLogout();
+    window.location.href = "http://localhost:5173"; // Redirigir a la raíz sin /login
+  };
 
   return (
     <>
@@ -41,13 +59,31 @@ const Sidebar = ({ onLogout, isOpen, toggleSidebar }) => {
           </li>
 
           <li className="nav-item">
-            <Link className="nav-link" onClick={() => { onLogout(); toggleSidebar(); }}>
+            <Link className="nav-link" onClick={handleShowModal}>
               <i className="fas fa-sign-out-alt"></i>
               <span>Cerrar Sesión</span>
             </Link>
           </li>
         </ul>
       </div>
+
+      {/* Modal de Confirmación */}
+      <Modal show={showLogoutModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ¿Estás seguro de que deseas cerrar sesión?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleLogout}>
+            Aceptar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
